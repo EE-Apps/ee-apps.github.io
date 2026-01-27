@@ -498,6 +498,7 @@
 .speed-control input[type="range"] {
     flex: 1;
     cursor: pointer;
+    width: min(300px, 75%)
 }
 
 .speed-value {
@@ -529,9 +530,9 @@
         gap: 10px;
     }
 
-    .wheel-container {
-        width: 200px;
-        height: 200px;
+    .wheel-container, .wheel-container canvas {
+        width: 150px;
+        height: 150px;
     }
 
     .randomizer-header h1 {
