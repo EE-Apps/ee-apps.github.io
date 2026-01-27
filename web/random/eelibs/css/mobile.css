@@ -1,0 +1,14 @@
+
+@media (orientation: portrait) {
+    html, body {
+        overflow: hidden;
+    }
+
+    #nav.active {
+        width: 75dvw;
+    }
+
+    #content {
+        min-width: calc(100dvw - 90px);
+    }
+}

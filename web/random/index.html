@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Пример HTML-страницы — много элементов</title>
+    <link rel="stylesheet" href="eelibs/import.css">
+    <link rel="stylesheet" href="css/randomizer.css">
+</head>
+<body style="display: flex;">
+    <div id="nav" class="active">
+        <button id="openmenu" onclick="document.getElementById('nav').classList.toggle('active')"><img src="img/ui/lines.svg"></button>
+        <div id="navcontent"></div>
+    </div>
+    <div id="content">
+        <div class="page" id="settings">
+        </div>
+        <div class="page active" id="randomizer">
+            <!-- Header -->
+            <div class="randomizer-header">
+                <h1>Randomizer</h1>
+            </div>
+
+            <!-- Main Content -->
+            <div class="randomizer-main">
+                <!-- Spinner -->
+                <div class="randomizer-spinner"></div>
+            </div>
+
+            <!-- Controls -->
+            <div class="randomizer-controls">
+                <select class="mode-select hidden">
+                    <option value="wheel">🎡 Колесо</option>
+                    <option value="roulette">🎰 Рулетка</option>
+                    <option value="barrel">🎲 Барабан</option>
+                    <option value="list">📋 Список</option>
+                </select>
+                    
+                <div class="speed-control">
+                    <label>Скорость:</label>
+                    <input type="range" class="speed-input" min="10" max="100" value="50">
+                    <span class="speed-value">50</span>
+                </div>
+
+                <button class="settings-toggle hidden">⚙️ Настройки</button>
+            </div>
+
+            <!-- Result -->
+            <div class="randomizer-result hidden">
+                <div class="result-text">🎉 Результат:</div>
+                <div class="result-icon">✨</div>
+                <div class="result-value">-</div>
+                <button class="share-btn">📤 Поделиться результатом</button>
+            </div>
+        </div>
+        <div class="page" id="variants">
+            <!-- Settings Panel -->
+            <div class="randomizer-settings">
+                <div class="settings-header">⚙️ Настройки вариантов</div>
+                        
+                <div class="settings-section">
+                    <div class="section-title">Варианты</div>
+                    <div class="variants-list"></div>
+                    <button class="add-variant-btn">+ Добавить вариант</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="eelibs/import.js" type="module"></script>
+<script src="js/init.js" type="module"></script>
+</html>
