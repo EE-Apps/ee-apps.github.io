@@ -4,7 +4,7 @@
     - options: array of { value: string, label: string, group?: string }
     - config: { placeholder, searchable(boolean) }
 */
-function createCustomDropdown(container, options = [], config = {}) {
+function createCustomDropdown(container, options = [], config = {}, isContainer = true) {
     if (!container) return null;
 
     const { placeholder = "Выберите...", searchable = true } = config;
@@ -26,7 +26,7 @@ function createCustomDropdown(container, options = [], config = {}) {
         </div>
     `;
 
-    container.appendChild(root);
+    if (isContainer) { container.appendChild(root) };
 
     const control = root.querySelector('.custom-dd__control');
     const menu = root.querySelector('.custom-dd__menu');

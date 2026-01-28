@@ -1,0 +1,31 @@
+.modal {
+    &:not(.active) {
+        transform: translateY(50rem);
+    }
+    &.active {
+        transform: translateY(0rem);
+    }
+
+    &.dialog {
+        width: calc(90% - var(--ds) * 2);
+        padding: var(--ds);
+        background-color: var(--bg-sec-great);
+        border-radius: var(--br);
+        position: absolute;
+        margin: 0 3%;
+
+        &#moreDiv {
+            @media (orientation: landscape) {
+                transform: translateY(50rem);
+            }
+
+            height: calc(25rem - var(--ds) * 2);
+            bottom: 3.5rem;
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            gap: var(--ds);
+            justify-items: center;
+            z-index: 1000;
+        }
+    }
+}

@@ -35,17 +35,21 @@
     --ac-bg-great-light: #5e8199;
 
     --transitions: 0.3s ease;
-    --transition: all var(--transitions);
+    --tr-out: 0.25s cubic-bezier(0.2, 0.0, 0.0, 1);
+    --tr-in: 0.25s cubic-bezier(0.4, 0.0, 1, 1);
+    --tr-in-out: 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);
+    --tr: all var(--transitions);
 
     --height: 16px;
 }
+
 
 * {
     transition: background-color 0.3s ease, color 0.3s ease;
     scrollbar-width: thin;
     scrollbar-color: var(--text-sec) var(--bg-sec);
     color: var(--text-pri);
-    transition: var(--transition);;
+    transition: var(--tr);
 }
 
 
@@ -99,6 +103,7 @@ button {
     border: 1px solid var(--bc);
     color: var(--text-pri);
     padding: 5px;
+    transition: transform var(--tr-out);
 }
 
 button:hover {
@@ -107,6 +112,7 @@ button:hover {
     color: var(--text-sec);
     cursor: pointer;
     text-decoration: underline;
+    transform: scale(1.05);
 }
 
 video {
@@ -126,7 +132,6 @@ video {
     background-color: var(--bg-input);
     color: var(--text-pri);
     min-height: 20px;
-    transition: var(--transition);
     background-image: none;
     background-repeat: no-repeat;
     background-position-y: center;
@@ -172,7 +177,7 @@ input[type="range"] {
     background: #ccc;
     border-radius: var(--br);
     outline: none;
-    transition: var(--transition);
+    transition: var(--tr);
     margin: 8px 0;
     padding: 0;
   }

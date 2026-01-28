@@ -4,3 +4,6 @@ import './js/notification.js';
 import './js/pages.js';
 import './js/translator.js';
 import './js/websocket.js';
+import './js/nav.js';
+import './js/settings.js';
+import './js/mobile.js';
