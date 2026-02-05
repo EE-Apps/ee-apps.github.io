@@ -210,6 +210,7 @@ body {
     appearance: none;
 	max-width: 150px;
     color: var(--text-primary);
+    background: none;
 }
 
 #search-bar {
@@ -317,13 +318,13 @@ body {
 /* New styles for iframe container */
 .iframe-wrapper {
     position: absolute;
-    top: 10px;  /* Adjust as needed */
-    left: 10px;  /* Adjust to be right of sidebar */
+    top: 10px;
+    left: 10px;
     background: var(--background-secondary-great);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border: none;
     border-radius: var(--br);
-    z-index: 9999;  /* Make sure this is the highest z-index on the page */
+    z-index: 9999;
     width: 100%;
     height: 90%;
 	max-width: 1000px;

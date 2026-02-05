@@ -203,7 +203,12 @@ function openEditModal(position) {
     const iconInput = modal.querySelector('#pinEditIcon');
     const previewImg = modal.querySelector('#pinEditPreviewImg');
     iconInput.addEventListener('input', () => {
-        previewImg.src = iconInput.value;
+        if (iconInput.value == '') {
+            const url = new URL(modal.querySelector('#pinEditLink').value);
+            const domain = url.hostname;
+            console.log(`https://www.google.com/s2/favicons?domain=${domain}&sz=256`);
+            previewImg.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=256`
+        } else previewImg.src = iconInput.value;
     });
     
     // Close handlers

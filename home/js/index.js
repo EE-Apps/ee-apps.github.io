@@ -119,7 +119,21 @@ const defaultSettings = {
         desmos: {
             enabled: true,
         },
-    }
+    },
+    catalogs: [
+        {
+            name: 'Steam',
+            link: 'https://store.steampowered.com/',
+            img: 'img/company/steam.png',
+            on: true,
+        },
+        {
+            name: 'Microsoft Apps',
+            link: 'https://apps.microsoft.com/home/',
+            img: 'img/company/microsoft/apps.png',
+            on: true,
+        },
+    ],
 };
 
 const settingsSchema = {
@@ -200,7 +214,7 @@ const settingsSchema = {
                 }
             }
         ]
-    }
+    },
 };
 
 // Function to load settings from localStorage
@@ -876,6 +890,24 @@ function loadApps(company) {
     document.getElementById(`${company}-apps`).classList.add('active');
 }
 
+function loadCatalogs() {
+    if (settings?.catalogs) {
+        const div = document.getElementById('catalogs');
+        div.innerHTML = '';
+
+        settings.catalogs.forEach(catalog => {
+            if (!catalog.on) return;
+
+            const el = document.createElement('a');
+            el.className = 'app-btn';
+            el.href = catalog.link;
+            el.innerHTML = `<img src="${catalog.img}" alt="${catalog.name}">`
+
+            div.appendChild(el);
+        })
+    }
+}
+
 function generateSettingsUI(containerId, schema, settings) {
     const container = document.getElementById(containerId);
     //container.innerHTML = "";
@@ -949,6 +981,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadSettingsFromStorage();
     generateSettingsUI("settings", settingsSchema, settings);
+    loadCatalogs()
 
     // Settings button handler
     const settingsBtn = document.getElementById('settingsBtn');

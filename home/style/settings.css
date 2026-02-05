@@ -9,7 +9,7 @@
     width: 100%;
 }
 .settings-section, .settingsSectionDiv {
-    width: calc(100% - 40px);
+    width: calc(100% - 45px);
 }
 .settingsSectionDiv {
     overflow-y: hidden;

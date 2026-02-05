@@ -28,27 +28,30 @@
 <body id="body">
     <!-- Sidebar for app buttons -->
     <aside id="sidebar" class="module">
-        <button class="app-btn" data-company="ee">
-            <img src="./icons/ee.svg" alt="EE">
-        </button>
-        <button class="app-btn" data-company="microsoft">
-            <img src="./icons/microsoft.svg" alt="Microsoft">
-        </button>
-        <button class="app-btn" data-company="google">
-            <img src="./icons/google.svg" alt="Google">
-        </button>
-        <button class="app-btn" data-company="yandex">
-            <img src="./icons/yandex.svg" alt="Yandex">
-        </button>
-        <button class="app-btn" data-company="vk">
-            <img src="./icons/vk.svg" alt="VContacte">
-        </button>
-        <button class="app-btn" data-company="desmos">
-            <img src="./icons/desmos.png" alt="VContacte">
-        </button>
-        <a class="app-btn" href="https://deepwiki.com/" target="_blank" rel="noopener" data-company="deepwiki">
-            <img src="./icons/deepwiki.png" alt="DeepWiki">
-        </a>
+        <div id="companies">
+            <button class="app-btn" data-company="ee">
+                <img src="./icons/ee.svg" alt="EE">
+            </button>
+            <button class="app-btn" data-company="microsoft">
+                <img src="./icons/microsoft.svg" alt="Microsoft">
+            </button>
+            <button class="app-btn" data-company="google">
+                <img src="./icons/google.svg" alt="Google">
+            </button>
+            <button class="app-btn" data-company="yandex">
+                <img src="./icons/yandex.svg" alt="Yandex">
+            </button>
+            <button class="app-btn" data-company="vk">
+                <img src="./icons/vk.svg" alt="VContacte">
+            </button>
+            <button class="app-btn" data-company="desmos">
+                <img src="./icons/desmos.png" alt="VContacte">
+            </button>
+            <a class="app-btn" href="https://deepwiki.com/" target="_blank" rel="noopener" data-company="deepwiki">
+                <img src="./icons/deepwiki.png" alt="DeepWiki">
+            </a>
+        </div>
+        <div id="catalogs"></div>
     </aside>
 
     <!-- Main content -->
@@ -363,6 +366,17 @@
                 <h2>Companies</h2>
             </div>
             <div id="settCompanies" class="settingsSectionDiv">
+
+            </div>
+        </div>
+        <div class="settings-section" id="settCatalogsDiv">
+            <div class="settings-header">
+                <button class="hideSettSection" data-section="settCatalogs">
+                    <img src="img/ui/arrow/down.svg" alt="Hide">
+                </button>
+                <h2>Catalogs</h2>
+            </div>
+            <div id="settCatalogs" class="settingsSectionDiv">
 
             </div>
         </div>

@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     const modulesDiv = document.getElementById('settModules');
+    const catalogsDiv = document.getElementById('settCatalogs');
     const aisDiv = document.getElementById('settAi');
     // Module elements
     document.querySelectorAll('.module').forEach(module => {
@@ -58,10 +59,38 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         document.getElementById('settCompanies').appendChild(appBlock);
     });
+    settings.catalogs.forEach((catalog, i) => {
+        console.log(catalog);
+        const appBlock = document.createElement('div');
+        appBlock.className = 'settingsBlock';
+        appBlock.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <label for="toggle${catalog.name}" class="settingsLabel">${catalog.name}</label>
+                <button style="border: 0; padding: 0;"><img src="img/ui/edit.svg"></button>
+            </div>
+            <label class="oneui-switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
+        `;
+        appBlock.querySelector('button').addEventListener('click', () => {
+            openCatalogEditor(i)
+        })
+        appBlock.querySelector('input[type="checkbox"]').checked = settings.catalogs[i].on;
+        appBlock.querySelector('.oneui-switch').addEventListener('change', (e) => {
+            settings.catalogs[i].on = e.target.checked;
+            saveSettingsToStorage();
+            renderModules();
+        });
+        document.getElementById('settCatalogs').appendChild(appBlock);
+    });
+
     renderModules();
 });
 
 function renderModules() {
+    loadCatalogs()
+
     document.querySelectorAll('.module').forEach(module => {
         if (settings.modules[module.id]) {
             module.classList.add('mactive');
@@ -89,8 +118,8 @@ function renderModules() {
         }
     });
 
-    const sidebar = document.getElementById('sidebar');
-    sidebar.innerHTML = ''; // Clear previous content
+    const companies = document.getElementById('companies');
+    companies.innerHTML = ''; // Clear previous content
     Object.keys(apps).forEach(company => {
         if (['apple','amazon','samsung','huawei','adobe','meta'].includes(company)) return;
         if (!settings.company[company]) return; // Skip if module is disabled
@@ -102,6 +131,6 @@ function renderModules() {
         <img src="${apps[company].icon}" alt="${apps[company].name}" class="sidebar-icon"/>
         <!--span class="sidebar-name">${apps[company].name}</span-->
         `;
-        sidebar.appendChild(companyItem);
+        companies.appendChild(companyItem);
     });
 }
