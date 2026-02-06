@@ -133,6 +133,12 @@ const defaultSettings = {
             img: 'img/company/microsoft/apps.png',
             on: true,
         },
+        {
+            name: 'DeepWiki',
+            link: 'https://deepwiki.com/',
+            img: 'icons/deepwiki.png',
+            on: true,
+        },
     ],
 };
 
@@ -223,8 +229,16 @@ function loadSettingsFromStorage() {
     if (savedSettings) {
         try {
             const parsed = JSON.parse(savedSettings);
-            // Merge saved settings with defaults to handle new settings
+
+            // обычный merge
             settings = deepMerge(defaultSettings, parsed);
+
+            // ДОПОЛНИТЕЛЬНО: синхронизация catalogs
+            settings.catalogs = mergeCatalogs(
+                defaultSettings.catalogs,
+                parsed.catalogs || []
+            );
+
         } catch (e) {
             console.error('Error parsing saved settings:', e);
             settings = JSON.parse(JSON.stringify(defaultSettings));
@@ -233,6 +247,7 @@ function loadSettingsFromStorage() {
         settings = JSON.parse(JSON.stringify(defaultSettings));
     }
 }
+
 
 // Function to save settings to localStorage
 function saveSettingsToStorage() {
