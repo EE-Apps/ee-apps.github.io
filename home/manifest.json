@@ -1,5 +1,5 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "EE New Tab",
     "description": "EE New Tab",
     "default_locale": "en",
