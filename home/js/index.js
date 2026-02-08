@@ -223,6 +223,45 @@ const settingsSchema = {
     },
 };
 
+// Функция для безопасного слияния каталогов
+function mergeCatalogs(defaultCatalogs, savedCatalogs) {
+    if (!Array.isArray(savedCatalogs) || savedCatalogs.length === 0) {
+        // Если нет сохраненных каталогов - возвращаем копию дефолтных
+        return defaultCatalogs.map(catalog => ({ ...catalog }));
+    }
+
+    // Создаем мапу дефолтных каталогов для быстрого поиска по имени
+    const defaultMap = new Map();
+    defaultCatalogs.forEach(catalog => {
+        defaultMap.set(catalog.name, { ...catalog }); // копируем объект
+    });
+
+    const merged = [];
+
+    // Обрабатываем сохраненные каталоги
+    savedCatalogs.forEach(saved => {
+        if (defaultMap.has(saved.name)) {
+            // Объединяем с дефолтным (сохраняем свойства из сохраненного)
+            const defaultCat = defaultMap.get(saved.name);
+            merged.push({
+                ...defaultCat,
+                ...saved // saved перекрывает дефолтные значения
+            });
+            defaultMap.delete(saved.name); // помечаем как обработанный
+        } else {
+            // Новый каталог, которого нет в дефолтных - добавляем как есть
+            merged.push({ ...saved });
+        }
+    });
+
+    // Добавляем оставшиеся дефолтные каталоги (которых не было в сохраненных)
+    defaultMap.forEach(catalog => {
+        merged.push(catalog);
+    });
+
+    return merged;
+}
+
 // Function to load settings from localStorage
 function loadSettingsFromStorage() {
     const savedSettings = localStorage.getItem('appSettings');

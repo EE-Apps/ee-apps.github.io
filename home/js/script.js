@@ -1,5 +1,5 @@
 // alert("1917")
-let thisversion = "1.7.6";
+let thisversion = "1.7.7";
 const searchEngines = {
     google: {
         url: "https://www.google.com/search?q=",
@@ -12,6 +12,10 @@ const searchEngines = {
     yandex: {
         url: "https://yandex.com/search/?text=",
         assistant: { url: "https://alice.yandex.ru/", icon: "./icons/alice.svg" }
+    },
+    duckduckgo: {
+        url: "https://duckduckgo.com/?q=",
+        assistant: { url: "https://duck.ai/", icon: "./icons/duck.svg" }
     },
     openai: {
         url: "https://chatgpt.com/?temporary-chat=true&q=",

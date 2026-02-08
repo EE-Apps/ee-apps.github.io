@@ -1,9 +1,9 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "EE New Tab",
     "description": "EE New Tab",
     "default_locale": "en",
-    "version": "1.7.6",
+    "version": "1.7.7",
     "icons": {
          "16": "exticon.png",
          "32": "exticon.png",
