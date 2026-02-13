@@ -464,7 +464,7 @@ let apps = {
             { name: "EEditor", link: "http://eeditor-ws.github.io", icon: "ee/eeditor.svg" },
             { name: "EEditor Lib", link: "http://eeditor-ws.github.io/page/library/download", icon: "ee/eelib.svg" },
             { name: "Weather EE", link: "http://ee-apps.github.io/web/weather/index.html", icon: "ee/weather.png" },
-            { name: "BattleBashns", link: "http://ee-apps.github.io/web/battlebashns/index.html", icon: "ee/battlebashns.svg" },
+            { name: "BattleBashns", link: "http://ee-apps.github.io/web/battlebashns/index.html", icon: "ee/battlebashns.png" },
         ],
     },
     microsoft: {
