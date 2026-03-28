@@ -38,6 +38,7 @@ const defaultSettings = {
         assistant: true,
         sidebar: true,
         pins: true,
+        search: true,
     },
     ai: {
         chatgpt: {
