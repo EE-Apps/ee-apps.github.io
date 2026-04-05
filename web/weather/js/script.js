@@ -1,7 +1,7 @@
 let globalLat = null;
 let globalLon = null;
 
-const weatherIcons = {
+/*const weatherIcons = {
         0: "ico/clear.svg",                 // Clear sky
         1: "ico/partly_cloudy.svg",         // Partly cloudy
         2: "ico/cloudy.svg",                // Cloudy
@@ -30,6 +30,36 @@ const weatherIcons = {
         95: "ico/thunderstorm.svg",         // Thunderstorm
         96: "ico/thunderstorm.svg",         // Thunderstorm
         99: "ico/thunderstorm.svg",         // Thunderstorm
+};*/
+const weatherIcons = {
+        0: "ico/gg/sunny.png",                 // Clear sky
+        1: "ico/gg/partly_cloudy.png",         // Partly cloudy
+        2: "ico/gg/cloudy.png",                // Cloudy
+        3: "ico/gg/cloudy.png",                // Cloudy
+        45: "ico/gg/fog.png",                  // Fog
+        48: "ico/gg/fog.png",                  // Fog
+        51: "ico/gg/showers_rain.png",         // Light rain
+        53: "ico/gg/heavy_rain.png",           // Moderate rain
+        55: "ico/gg/heavy_rain.png",           // Moderate rain
+        56: "ico/gg/freezing_rain.png",        // Freezing rain
+        57: "ico/gg/freezing_rain.png",        // Freezing rain
+        61: "ico/gg/showers_rain.png",         // Showers
+        63: "ico/gg/heavy_rain.png",           // Moderate rain
+        65: "ico/gg/heavy_rain.png",           // Heavy rain
+        66: "ico/gg/freezing_rain.png",        // Freezing rain
+        67: "ico/gg/freezing_rain.png",        // Freezing rain
+        71: "ico/gg/light_snow.png",           // Light snow
+        73: "ico/gg/moderate_snow.png",        // Moderate snow
+        75: "ico/gg/heavy_snow.png",           // Heavy snow
+        77: "ico/gg/snow_showers_snow.png",    // Snow showers
+        80: "ico/gg/showers_rain.png",         // Rain showers
+        81: "ico/gg/heavy_rain_showers.png",   // Heavy rain showers
+        82: "ico/gg/extreme_rain_showers.png", // Extreme rain showers
+        85: "ico/gg/snow_showers_snow.png",    // Light snow showers
+        86: "ico/gg/snow_showers_snow.png",    // Heavy snow showers
+        95: "ico/gg/thunderstorm.png",         // Thunderstorm
+        96: "ico/gg/thunderstorm.png",         // Thunderstorm
+        99: "ico/gg/thunderstorm.png",         // Thunderstorm
 };
 
 const getShortLang = () => {
@@ -134,7 +164,8 @@ function renderDaily(daily) {
             <p class="c-time">${days[new Date(t).getDay()]}</p>
             <img class="c-img" src="${weatherIcons[daily.weather_code[i]]}">
             <p class="c-temp">
-                ${Math.round(daily.temperature_2m_min[i])}° –
+                ${Math.round(daily.temperature_2m_min[i])}° 
+                <br>–<br>
                 ${Math.round(daily.temperature_2m_max[i])}°
             </p>
         `;
@@ -144,14 +175,14 @@ function renderDaily(daily) {
 
 /* ---------- SCROLL ---------- */
 
-["hours-container", "days-container"].forEach(id => {
+/*["hours-container", "days-container"].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     el.addEventListener("wheel", e => {
         e.preventDefault();
         el.scrollLeft += e.deltaY;
     });
-});
+});*/
 
 function getAppSettings() {
     let settings = JSON.parse(localStorage.getItem("appSettings"));
@@ -176,7 +207,10 @@ function getAppSettings() {
 /* ---------- CUSTOM DROPDOWN ---------- */
 
 document.addEventListener("DOMContentLoaded", () => {
-    const container = document.getElementById("city-select-custom");
+    const container = document.createElement('div')
+    container.id = 'city-select-custom'
+    document.querySelector('#home .page-header').appendChild(container)
+    //const container = document.getElementById("city-select-custom");
 
     const cities = [
         // ПМР
@@ -366,13 +400,22 @@ document.addEventListener("DOMContentLoaded", () => {
 /* ---------- BACKGROUND ---------- */
 
 function setBackground(type) {
-    const nowBack = document.getElementById("nowBack");
-    const container = document.getElementById("container");
-    if (!nowBack || !container) return;
+    //const nowBack = document.getElementById("nowBack");
 
-    nowBack.className = "";
+    const nowBack = document.querySelector("#home .page-header")
+    if (!nowBack) return;
+
+    if (!document.getElementById('blacker')) {
+        const blacker = document.createElement('div')
+        blacker.id = 'blacker'
+        nowBack.appendChild(blacker)
+    }
+    nowBack.classList.remove('weather-rain')
+    nowBack.classList.remove('weather-cloudy')
+    nowBack.classList.remove('weather-sun')
+    nowBack.classList.remove('weather-snow')
+    nowBack.classList.remove('weather-fog')
     nowBack.classList.add(`weather-${type}`);
 
     const hour = new Date().getHours().toString().padStart(2, "0");
-    container.classList.add(`time-${hour}`);
 }

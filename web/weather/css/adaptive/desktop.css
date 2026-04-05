@@ -1,0 +1,10 @@
+@media (orientation: landscape) {
+    #home .page-header {
+        margin-left: var(--ds);
+        border-bottom-left-radius: var(--br);
+        
+        #blacker {
+            border-bottom-left-radius: var(--br);
+        }
+    }
+}

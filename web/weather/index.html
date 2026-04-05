@@ -1,17 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather EE</title>
     <link rel="icon" href="ico.png">
-    <!--link rel="stylesheet" href="css/styles.css"-->
+    <link rel="stylesheet" href="eelibs/import.css">
     <link rel="stylesheet" href="css/neoweather.css">
     <link rel="stylesheet" href="css/scroll.css">
     <link rel="stylesheet" href="css/backgrounds.css">
     <link rel="stylesheet" href="css/time.css">
-    <link rel="stylesheet" href="css/mobile.css">
-    <link rel="stylesheet" href="../../home/eelibs/import.css">
+    <link rel="stylesheet" href="css/adaptive/adaptive-import.css">
 
     <link rel="manifest" href="pwa.json">
     <meta name="theme-color" content="#121212">
@@ -21,66 +20,43 @@
     }
     </script>
 </head>
-<body>
-    <div id="container"><div id="pages"><div class="page active">
+<body style="display: flex;">
+    <div id="nav" class="">
+        <button id="openmenu" onclick="openNavPanel()"><img src="img/ui/lines.svg"></button>
+        <div id="navcontent"></div>
+    </div>
+    <div id="content" class="">
+        <div class="page" id="settings"></div>
+        <div class="page" id="about"></div>
+        <div class="page" id="socials"></div>
+        <div class="page block" id="home">
+            <div class="pageContainer">
+                <div class="pageContent">
 
-        <div class="div-now">
-            <!-- <img src="back/rain.png" class="div-back-img"> -->
-            <div id="nowOverlay"><div id="nowBack"></div></div>
-            <div class="bar">
-                <div id="city-select-custom"></div>
-                <!--select id="city-select" class="city-select">
-                    <option value="Tiraspol" data-lat="46.8406" data-lon="29.4744">[ПМР] Тирасполь</option>
-                    <option value="Bender" data-lat="46.1833" data-lon="29.0833">[ПМР] Бендеры</option>
-                    <option value="Kiev" data-lat="50.4501" data-lon="30.5236">[Укр] Киев</option>
-                    <option value="Odessa" data-lat="46.4825" data-lon="30.7233">[Укр] Одесса</option>
-                    <option value="Brovary" data-lat="50.4542" data-lon="30.8625">[Укр] Бровары</option>
-                    <option value="Moscow" data-lat="55.7558" data-lon="37.6173">[Рос] Москва</option>
-                    <option value="Leningrad" data-lat="59.9343" data-lon="30.3351">[Рос] Ленинград</option>
-                    <option value="Krasnodar" data-lat="45.0355" data-lon="38.9753">[Рос] Краснодар</option>
-                    <option value="Yekaterinburg" data-lat="56.8389" data-lon="60.6057">[Рос] Екатеринбург</option>
-                    <option value="Kemerovo" data-lat="55.3543" data-lon="86.0789">[Рос] Кемерово</option>
-                    <option value="Novokuznetsk" data-lat="53.7566" data-lon="87.0977">[Рос] Новокузнецк</option>
-                    <option value="Astana" data-lat="51.1694" data-lon="71.4491">[Каз] Астана</option>
-                    <option value="Minsk" data-lat="53.9" data-lon="27.5667">[Бел] Минск</option>
-                    <option value="Bobruisk" data-lat="53.1500" data-lon="29.2333">[Бел] Бобруйск</option>
-                    <option value="Gomel" data-lat="52.4443" data-lon="30.9754">[Бел] Гомель</option>
-                </select-->
-                <!--button class="settings" id="settings">⚙️</button-->
-            </div>
-            <h1 id="temperature"></h1>
-            <div id="div-detalis">
-                <div class="detalis" id="water">
-                    <img src="img/water.svg" class="detalis-ico" />
-                    <p class="detalis-text" id="humidity">%</p>
-                </div>
-                <div class="detalis" id="wind">
-                    <img src="img/wind.svg" class="detalis-ico" />
-                    <p class="detalis-text" id="wind-speed">м/с</p>
-                </div>
-                <div class="detalis" id="mmrrst">
-                    <img src="img/pressure.svg" class="detalis-ico" />
-                    <p class="detalis-text" id="pressure">мм рт ст</p>
+                    <!-- Почасовой прогноз (48 часов) -->
+                    <div class="div-hours cards" id="div-hours">
+                        <div class="scroll-container" id="hours-container">
+                        </div>
+                    </div>
+
+                    <!-- Подневной прогноз (на сегодня и ближайшие 10 дней) -->
+                    <div class="div-detalis cards" id="div-days">
+                        <div class="scroll-container" id="days-container">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <div id="navdown" class=""></div>
+    </div>
 
-        <!-- Почасовой прогноз (48 часов) -->
-        <div class="div-hours cards" id="div-hours">
-            <div class="scroll-container" id="hours-container">
-            </div>
-        </div>
+    <div id="modal" class="modal"><div id="modalForuse"></div></div>
 
-        <!-- Подневной прогноз (на сегодня и ближайшие 10 дней) -->
-        <div class="div-detalis cards" id="div-days">
-            <div class="scroll-container" id="days-container">
-            </div>
-        </div>
-    </div></div></div>
-
-    <script src="../../home/eelibs/import.js" type="module"></script>
-    <script src="js/scroll.js"></script>
-    <script src="script.js"></script>
-    <script src="now.js"></script>
 </body>
+<script src="eelibs/import.js" type="module"></script>
+<script src="eeframework.js" type="module"></script>
+
+<!--script src="js/scroll.js"></script-->
+<script src="js/script.js"></script>
+<script src="js/now.js"></script>
 </html>
