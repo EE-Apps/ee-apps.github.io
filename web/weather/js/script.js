@@ -128,9 +128,10 @@ async function updateAll() {
 
 function renderImportantTimes(hourly) {
     const settings = settingsManager ? settingsManager.get('weather') : {};
+    const container = document.getElementById('important-times-weather');
     
     if (!settings.showImportantTimes) {
-        document.getElementById('important-times-weather').innerHTML = '';
+        container.style.display = 'none';
         return;
     }
 
@@ -142,11 +143,11 @@ function renderImportantTimes(hourly) {
     ].filter(t => t && t.match(/^\d{1,2}:\d{2}$/));
 
     if (times.length === 0) {
-        document.getElementById('important-times-weather').innerHTML = '';
+        container.style.display = 'none';
         return;
     }
 
-    const container = document.getElementById('important-times-weather');
+    container.style.display = 'flex';
     container.innerHTML = '';
 
     times.forEach(timeStr => {
