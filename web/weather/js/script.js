@@ -115,8 +115,83 @@ async function updateAll() {
     // текущая погода
     NOWrenderCurrent(data.current);
 
+    renderImportantTimes(data.hourly);
+
+    renderHourly(data.hourly);
+    renderImportantTimes(data.hourly);
+
     renderHourly(data.hourly);
     renderDaily(data.daily);
+}
+
+/* ---------- IMPORTANT TIMES ---------- */
+
+function renderImportantTimes(hourly) {
+    const settings = settingsManager ? settingsManager.get('weather') : {};
+    
+    if (!settings.showImportantTimes) {
+        document.getElementById('important-times-weather').innerHTML = '';
+        return;
+    }
+
+    const importantTimesSettings = settingsManager ? settingsManager.get('importantTimes') : {};
+    const times = [
+        importantTimesSettings.time1,
+        importantTimesSettings.time2,
+        importantTimesSettings.time3
+    ].filter(t => t && t.match(/^\d{1,2}:\d{2}$/));
+
+    if (times.length === 0) {
+        document.getElementById('important-times-weather').innerHTML = '';
+        return;
+    }
+
+    const container = document.getElementById('important-times-weather');
+    container.innerHTML = '';
+
+    times.forEach(timeStr => {
+        const [hour, minute] = timeStr.split(':').map(Number);
+        
+        // Найти ближайший временной слот в почасовом прогнозе
+        let matchingIndex = -1;
+        
+        hourly.time.forEach((t, i) => {
+            const forecastHour = new Date(t).getHours();
+            const forecastMinute = new Date(t).getMinutes();
+            
+            if (forecastHour === hour && forecastMinute === minute) {
+                matchingIndex = i;
+            }
+        });
+
+        if (matchingIndex === -1) {
+            // Если точного совпадения нет, ищем ближайший час
+            hourly.time.forEach((t, i) => {
+                const forecastHour = new Date(t).getHours();
+                
+                if (forecastHour === hour && matchingIndex === -1) {
+                    matchingIndex = i;
+                }
+            });
+        }
+
+        if (matchingIndex !== -1) {
+            const card = document.createElement('div');
+            card.className = 'important-time-card';
+            
+            const temp = Math.round(hourly.temperature_2m[matchingIndex]);
+            const weatherCode = hourly.weather_code[matchingIndex];
+            const weatherIcon = weatherIcons[weatherCode] || 'ico/gg/sunny.png';
+            
+            card.innerHTML = `
+                <div class="time">${timeStr}</div>
+                <img src="${weatherIcon}" alt="weather">
+                <div class="temperature">${temp}°C</div>
+            `;
+            
+            container.appendChild(card);
+        }
+    });
 }
 
 /* ---------- HOURLY ---------- */

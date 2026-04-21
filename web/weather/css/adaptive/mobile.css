@@ -11,10 +11,10 @@
     .div-now {
         margin: 0;
         padding: 0;
-        padding-left: 1rem;
-        padding-bottom: 1rem;
+        padding-left: var(--ds);
+        padding-bottom: var(--ds);
         width: 100%;
-        max-width: calc(100dvw - 1rem);
+        max-width: calc(100dvw - var(--ds));
         h1, #div-detalis, .detalis {
             max-width: max-content;
         }
@@ -28,11 +28,11 @@
     #div-hours, #div-days {
         width: 100%;
         max-width: 100%;
-        margin: 0.5rem 0;
-        padding: 1rem 0;
+        margin: var(--dss) 0;
+        padding: var(--ds) 0;
     }
     .scroll-container {
-        padding: 0 1rem;
+        padding: 0 var(--ds);
     }
     #city-select-custom {
         max-width: 50px;
@@ -44,5 +44,15 @@
     #city-select-custom .custom-dd .custom-dd__control {
         justify-content: center;
         gap: 0;
+    }
+
+    #important-times-weather {
+        flex-direction: column;
+
+        .important-time-card {
+            width: calc(100% - var(--ds2));
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
     }
 }

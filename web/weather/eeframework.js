@@ -103,6 +103,12 @@ window.settingsManager.init({
             unit: "C",
             background: false,
             pageBackground: false,
+            showImportantTimes: true,
+            },
+        importantTimes: {
+            time1: '09:00',
+            time2: '14:00',
+            time3: '20:00'
             },
         clock: {
             clockFormat: "24",
@@ -137,7 +143,16 @@ window.settingsManager.init({
         title: "Weather",
         items: [
             { type: "toggle", key: "background", label: "Weather Background" },
-            { type: "toggle", key: "pageBackground", label: "Page Background" }
+            { type: "toggle", key: "pageBackground", label: "Page Background" },
+            { type: "toggle", key: "showImportantTimes", label: "Show Important Times" }
+        ]
+        },
+        importantTimes: {
+        title: "Important Times",
+        items: [
+            { type: "text", key: "time1", label: "Time 1 (HH:MM)", placeholder: "09:00" },
+            { type: "text", key: "time2", label: "Time 2 (HH:MM)", placeholder: "14:00" },
+            { type: "text", key: "time3", label: "Time 3 (HH:MM)", placeholder: "20:00" }
         ]
         }
     },
@@ -145,6 +160,9 @@ window.settingsManager.init({
         // Вызывается при любом изменении настроек
         if (typeof updateTimeDisplay === 'function') {
         updateTimeDisplay();
+        }
+        if (typeof updateAll === 'function') {
+        updateAll();
         }
     }
 });

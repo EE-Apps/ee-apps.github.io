@@ -140,6 +140,18 @@ class SettingsManager {
             });
         }
 
+        if (item.type === "text") {
+            const placeholder = item.placeholder || "";
+            block.innerHTML = `
+                <label>${item.label}:</label>
+                <input type="text" class="settings-text" value="${value || ""}" placeholder="${placeholder}">
+            `;
+
+            block.querySelector("input").addEventListener("change", e => {
+                this.set(`${sectionKey}.${item.key}`, e.target.value);
+            });
+        }
+
         return block;
     }
 

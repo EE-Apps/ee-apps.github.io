@@ -231,3 +231,50 @@ body {
 .c-img {
     width: 45px;
 }
+
+.important-times-container {
+    display: flex;
+    flex-direction: row;
+    gap: var(--ds);
+    margin-bottom: var(--ds);
+    padding: var(--ds);
+    width: calc(100% - var(--ds2));
+    background-color: var(--background-secondary);
+    border-radius: var(--br);
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.important-time-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ds);
+    background-color: var(--background-primary);
+    border-radius: var(--br);
+    min-width: 120px;
+    text-align: center;
+    gap: var(--dss);
+}
+
+.important-time-card .time {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.important-time-card .temperature {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.important-time-card .weather-description {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.important-time-card img {
+    width: 40px;
+    height: 40px;
+}
