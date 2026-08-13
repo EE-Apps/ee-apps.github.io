@@ -168,6 +168,10 @@ body, html {
     margin: 5px 0;
     font-size: 14px;
     text-align: center;
+
+    &.c-time-day {
+        margin-top: 0;
+    }
 }
 
 .c-img {

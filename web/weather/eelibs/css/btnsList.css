@@ -1,5 +1,5 @@
 .btnsList {
-    padding: var(--ds);
+    padding: 0;
     margin: var(--dss) 0;
     background-color: var(--bg-sec-great);
     border-radius: var(--br);
@@ -11,14 +11,16 @@
     overflow-y: hidden;
 
     button {
-        border-radius: var(--br);
-        background-color: var(--bg-pri-great);
+        border-radius: var(--brc);
+        background-color: var(--bg-sec-great);
         display: inline-flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
+        gap: var(--ds);
         width: 100px;
         min-width: 100px;
         height: calc(24px + 8px * 2);
+        transition: var(--tr-in);
 
         &:hover {
             background-color: var(--bg-sec-hover);
@@ -36,11 +38,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: absolute;
+            top: auto;
+            bottom: auto;
+            left: var(--dss);
         }
 
         &.active {
-            border-radius: var(--brs);
             background: linear-gradient(135deg, #0f4569, #518eb6, #1993e5);
+
+            p {
+                margin-left: 24px;
+            }
 
             &.purple {
                 background: linear-gradient(135deg, #3e0f69, #8551b6, #9719e5);

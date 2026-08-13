@@ -22,6 +22,7 @@
 
     --br: 1.2rem;
     --brs: 0.5rem;
+    --brc: 99999px;
     --bc: #404040;
     --ds: 1rem;
     --dss: 0.5rem;
@@ -49,9 +50,11 @@
 
 
 * {
+    transition: background-color 0.3s ease, color 0.3s ease;
     scrollbar-width: thin;
     scrollbar-color: var(--text-sec) var(--bg-sec);
     color: var(--text-pri);
+    transition: var(--tr);
 }
 
 
@@ -83,6 +86,10 @@ body {
 
 html {
     overflow-y: hidden;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 }
 
 a {
@@ -180,6 +187,7 @@ input[type="range"] {
     background: var(--text-sec);
     border-radius: var(--br);
     outline: none;
+    transition: var(--tr);
     margin: 12.5px 0;
     padding: 0;
     &.vertical {
@@ -215,6 +223,7 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: var(--brs);
     cursor: pointer;
     margin: 0;
+    transition: var(--tr-in);
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {

@@ -1,7 +1,7 @@
 /* Общая сборка цвета */
-#div-hours .card {
+/*#div-hours .card {
   background-color: hsl(var(--h) var(--s) var(--l));
-}
+}*/
 
 #container {
     background-color: hsl(var(--h) var(--s) var(--l) 50%);

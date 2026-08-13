@@ -11,7 +11,7 @@ class PagesManager {
             const name = btn.name || btn.id || '';
             const id = btn.id || btn.name;
 
-            el.innerHTML = `<div class="imgcont"><img src="${btn.img || 'img/ui/check/checked.svg'}"></div>${name}`;
+            el.innerHTML = `<div class="imgcont"><img src="${btn.img || 'img/ui/check/checked.svg'}"></div><p>${name}</p>`;
             el.dataset.where = id;
 
             el.addEventListener('click', () => {

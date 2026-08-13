@@ -17,7 +17,7 @@
     overflow-x: hidden;
 
     .pageContent {
-        padding: 0 var(--ds) !important;
+        padding: 0 var(--ds) calc(env(safe-area-inset-bottom) + 50px) var(--ds);
     }
     
     &.active {
@@ -89,7 +89,6 @@
     top: 0;
     padding: var(--ds);
     background-color: var(--bg-pri-great);
-    z-index: 100;
 
     button {
         border: none;

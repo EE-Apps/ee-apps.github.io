@@ -10,13 +10,15 @@
     <link rel="stylesheet" href="css/scroll.css">
     <link rel="stylesheet" href="css/backgrounds.css">
     <link rel="stylesheet" href="css/time.css">
+    <link rel="stylesheet" href="css/module/header.css">
+    <link rel="stylesheet" href="css/module/detalis.css">
     <link rel="stylesheet" href="css/adaptive/adaptive-import.css">
 
     <link rel="manifest" href="pwa.json">
     <meta name="theme-color" content="#121212">
     <script>
     if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js');
+        navigator.serviceWorker.register('/sw.js');
     }
     </script>
 </head>
@@ -48,6 +50,55 @@
                         <div class="scroll-container" id="days-container">
                         </div>
                     </div>
+
+                    <div id="sunday" class="detalis_card">
+                        <div class="card_text">
+                            <b>Световой день</b>
+                            <div id="sunday_text">
+                                <img src="img/arc.svg" class="nr sundayarc">
+                                <div id="sunday2">
+                                    <div>
+                                        <img src="img/sunrise.png">
+                                        <div id="sunday_start"></div>
+                                    </div>
+                                    <p id="sunday_duration"></p>
+                                    <div>
+                                        <img src="img/sunset.png">
+                                        <div id="sunday_end"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="pressure" class="detalis_card">
+                        <img src="pressure.png">
+                        <div class="card_text">
+                            <b>Давление</b>
+                            <p id="pressure_text"></p>
+                        </div>
+                    </div>
+                    <div id="wind" class="detalis_card">
+                        <img src="wind.png" class="wind_ico">
+                        <div class="card_text">
+                            <b>Ветер</b>
+                            <p id="wind_speed"></p>
+                            <p id="wind_dirrection"></p>
+                        </div>
+                    </div>
+                    <div id="clouds" class="detalis_card">
+                        <img src="cloud.png">
+                        <div class="card_text">
+                            <b>Облачность</b>
+                            <p id="clouds_text"></p>
+                        </div>
+                    </div>
+                    <div id="fallout" class="detalis_card">
+                        <img src="fallout.png" class="fallout_ico">
+                        <div class="card_text">
+                            <b>Осадки</b>
+                            <p id="fallout_text"></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -58,6 +109,7 @@
 
 </body>
 <script src="eelibs/import.js" type="module"></script>
+<script src="eelibs/js/bridge.js" type="module"></script>
 <script src="eeframework.js" type="module"></script>
 
 <!--script src="js/scroll.js"></script-->
