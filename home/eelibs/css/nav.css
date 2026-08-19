@@ -9,6 +9,9 @@
     min-width: 40px;
     max-width: max-content;
     padding-top: 50px;
+    max-height: calc(100dvh - 50px - var(--ds) - 32px);
+    overflow-y: auto;
+    z-index: 99;
     /*transform: translateX(-150%);*/
     &.active {
         /*transform: translateX(0);*/
@@ -56,6 +59,8 @@
         width: 100%;
             min-height: 40px;
             max-height: 40px;
+        transition: var(--tr-in-out);
+        border: none;
         &.active {
             background-color: var(--bg-sec-hover);
             border-radius: var(--brs);
@@ -80,10 +85,15 @@
     display: none;
     align-items: center;
     justify-content: space-evenly;
-    width: 100%;
+    width: unset;
     height: 50px;
     position: fixed;
+    left: calc(-1 * var(--ds));
+    right: calc(-1 * var(--ds));
     bottom: 0;
+    padding: 0 var(--ds) calc(env(safe-area-inset-bottom) + var(--ds)) var(--ds);
+    background-color: var(--bg-pri-great);
+    z-index: 50;
 
     .navbtn {
         background: none;
@@ -123,7 +133,7 @@
     }
 }
 
-#moreDiv {
+.moreDiv {
 
 
     .navbtn {

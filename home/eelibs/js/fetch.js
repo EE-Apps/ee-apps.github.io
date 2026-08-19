@@ -8,3 +8,5 @@ function fetchGet(link, callback) {
 /*fetchGet(link, (data) => {
     alert(data)
 });*/
+
+window.fetchGet = fetchGet;

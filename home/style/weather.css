@@ -154,10 +154,10 @@ body.dark-theme .theme-toggle {
     background-blend-mode: color-burn !important;
 }
 .weather-weather #weather {
-    background: var(--background-primary) !important;
+    background: var(--bg-sec) !important;
 }
 .weather-weather #timeDiv {
-    background-color: var(--background-primary);
+    background-color: var(--bg-sec);
     border-radius: var(--br);
     padding: 1rem 0.5rem;
 }

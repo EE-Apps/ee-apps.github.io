@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    document.querySelectorAll('.hideSettSection').forEach(button => {
+    document.querySelectorAll('.settings-header').forEach(header => {
+        const button = header.querySelector('button')
         const sectionId = button.getAttribute('data-section');
         const sectionDiv = document.getElementById(sectionId);
         sectionDiv.style.height = sectionDiv.scrollHeight + 'px';
         button.querySelector('img').style.rotate = '-90deg';
 
-        button.addEventListener('click', () => {
+        header.addEventListener('click', () => {
             if (sectionDiv.style.height === '0px') {
                 sectionDiv.style.height = sectionDiv.scrollHeight + 'px';
                 button.querySelector('img').style.rotate = '0deg';

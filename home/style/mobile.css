@@ -1,15 +1,17 @@
 @media (orientation: portrait) {
     #ais {
         flex-direction: row;
-        justify-content: flex-start
+        justify-content: flex-start;
+        margin: 0 auto;
     }
     #qbar {
         top: unset;
         bottom: 4rem;
         right: 10px;
-        width: unset;
+        left: var(--ds);
+        width: 100%;
         max-width: calc(100% - 3rem);
-        overflow-x: scroll;
+        overflow-x: auto;
         flex-direction: row;
     }
     #settingsBtn {

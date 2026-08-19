@@ -1,5 +1,5 @@
 // alert("1917")
-let thisversion = "1.7.7";
+let thisversion = "1.8.0";
 const searchEngines = {
     google: {
         url: "https://www.google.com/search?q=",
@@ -36,7 +36,8 @@ const searchEngines = {
 };
 
 const searchEngineSelect = document.getElementById("search-engine-select");
-const searchBar = document.getElementById("search-bar");
+const searchBar = document.getElementById("search-bar-input");
+const searchBarBtn = document.getElementById("search-btn");
 const assistantBtn = document.getElementById("assistant");
 const assistantIcon = document.getElementById("assistant-icon");
 const themeToggle = document.getElementById("theme-toggle");
@@ -58,45 +59,51 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add(savedTheme);
 });
 
+function searchInInernet() {
+    const query = searchBar.value.trim();
+
+    if (query) {
+        // 1. Проверка на внутреннюю команду app:
+        if (query.startsWith("app:")) {
+            const appName = query.slice(4).toLowerCase();
+            loadIframe(appName);
+            return;
+        }
+
+        // 2. Регулярное выражение для проверки, является ли запрос URL-адресом
+        // Проверяет наличие точки (напр. google.com) и отсутствие пробелов
+        const urlPattern = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]{2,}(\/.*)?$/i;
+
+        if (urlPattern.test(query)) {
+            let url = query;
+            
+            // Если адрес не начинается с протокола, добавляем https://
+            if (!/^https?:\/\//i.test(query)) {
+                url = "https://" + query;
+            }
+            
+            window.location.href = url;
+            return;
+        }
+
+        // 3. Если это не команда и не ссылка — выполняем поиск
+        const engine = searchEngineSelect.value;
+        const searchUrl = searchEngines[engine].url + encodeURIComponent(query);
+        window.location.href = searchUrl;
+    }
+}
+
 // Event listeners
 searchEngineSelect.addEventListener("change", updateSearchSettings);
 assistantBtn.addEventListener("click", () => window.open(getAssistantUrl()));
 themeToggle.addEventListener("click", toggleTheme);
 searchBar.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-        const query = searchBar.value.trim();
-
-        if (query) {
-            // 1. Проверка на внутреннюю команду app:
-            if (query.startsWith("app:")) {
-                const appName = query.slice(4).toLowerCase();
-                loadIframe(appName);
-                return;
-            }
-
-            // 2. Регулярное выражение для проверки, является ли запрос URL-адресом
-            // Проверяет наличие точки (напр. google.com) и отсутствие пробелов
-            const urlPattern = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]{2,}(\/.*)?$/i;
-
-            if (urlPattern.test(query)) {
-                let url = query;
-                
-                // Если адрес не начинается с протокола, добавляем https://
-                if (!/^https?:\/\//i.test(query)) {
-                    url = "https://" + query;
-                }
-                
-                window.location.href = url;
-                return;
-            }
-
-            // 3. Если это не команда и не ссылка — выполняем поиск
-            const engine = searchEngineSelect.value;
-            const searchUrl = searchEngines[engine].url + encodeURIComponent(query);
-            window.location.href = searchUrl;
-        }
-    }
+    if (event.key === "Enter") searchInInernet()
 });
+
+searchBarBtn.addEventListener("click", () => {
+    searchInInernet()
+})
 
 // Update search engine and assistant settings
 function updateSearchSettings() {

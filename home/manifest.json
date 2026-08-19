@@ -3,7 +3,7 @@
     "name": "EE New Tab",
     "description": "EE New Tab",
     "default_locale": "en",
-    "version": "1.7.7",
+    "version": "1.8.0",
     "icons": {
          "16": "exticon.png",
          "32": "exticon.png",
@@ -13,5 +13,5 @@
     "chrome_url_overrides": {
         "newtab": "index.html"
     },
-    "homepage_url": "https://ee-apps.netlify.app"
+    "homepage_url": "https://ee-apps.github.io"
 }
