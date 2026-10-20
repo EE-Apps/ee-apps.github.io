@@ -1,7 +1,7 @@
 class Translator {
     constructor() {
-        this.currentLang = 'en';
-        this.translations = translations;
+        this.currentLang = window.settingsManager?.get('main.lang') ? window.settingsManager.get('main.lang') : 'en';
+        this.translations = window.eelib?.translations;
         this.initEventListeners();
         
         // Загружаем язык после небольшой задержки, чтобы DOM успел загрузиться
@@ -23,8 +23,7 @@ class Translator {
     }
 
     loadSavedLanguage() {
-        const body = document.body;
-        const savedLang = body.getAttribute('data-lang') || 'en';
+        const savedLang = window.settingsManager?.get('main.lang') || 'en';
         this.setLanguage(savedLang);
     }
 

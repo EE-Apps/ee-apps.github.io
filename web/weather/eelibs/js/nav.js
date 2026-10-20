@@ -50,22 +50,26 @@ class Nav {
     createHeadOfPage(page) {
         let head = document.createElement('header');
         head.className = 'page-header';
+        const img = page.iconHead ? `<img src="${page.iconHead}">` : ''
+        const title = page.titleHead ? page.titleHead : page.title
         head.innerHTML = `
-            <h1>${page.title}</h1>
+            ${img}
+            <h1>${title}</h1>
             <h3>${page.description ? page.description : ''}</h3>
         `;
 
         function generateLeftButton(type) {
-            const data = window.cnavMgr.leftBtns[type];
-            return `<button class="leftBtnsNav" onclick="${data.onclick}"><img src="${data.img}.svg"></button>`;
+            if (type === 'none' || type === false) return("<div></div>")
+            const data = window.cnavMgr?.leftBtns[type]
+            return `<button class="leftBtnsNav" onclick="${data?.onclick}"><img src="${data?.img}.svg"></button>`
         }
 
-        function generateRightButton(page, i) {
+        function generateRightButton(page, i, isMore) {
             const btnData = page.btns[i];
 
             const img = btnData[1] ?? window.cnavMgr.rightBtns[btnData[0]]?.img ?? 'img/ui/blank';
             const onclick = btnData[2] ?? window.cnavMgr.rightBtns[btnData[0]]?.onclick ?? '';
-            const text = btnData[3] ? btnData[0] : '';
+            const text = btnData[3] && isMore ? btnData[3] : '';
 
             let btn = document.createElement('button');
             if (typeof onclick === 'function') {
@@ -98,11 +102,11 @@ class Nav {
                 const btnOptions = page.subcategories.map(sub => ({
                     name: sub,
                     id: sub,
-                    img: 'img/ui/check/checked.svg' // или любой другой путь
+                    img: 'img/ui/check/checked.svg'
                 }));
 
-                // "Пинаем" функцию
-                const topNav = window.pagesManager.createBtnList(btnOptions);
+                // пинаем создание
+                const topNav = window.pagesManager.createBtnList(btnOptions, page.subcategoryActive);
 
                 // Добавляем специфический класс для этого контейнера
                 topNav.classList.add('topNav');
@@ -114,7 +118,7 @@ class Nav {
             }
         }
 
-        let leftBtn = page.leftBtn ? generateLeftButton(page.leftBtn) : generateLeftButton(eelib.leftBtn);
+        let leftBtn = page.leftBtn ? generateLeftButton(page.leftBtn) : window.eelib?.nav?.leftBtn ? generateLeftButton(window.eelib?.nav?.leftBtn) : generateLeftButton('nav');
 
         let hnav = document.createElement('div');
         hnav.className = 'page-header-btns';
@@ -151,21 +155,23 @@ class Nav {
             navRightMore.id = `${page.id}-navRightMore`;
             navRightMore.className = 'navRightMore';
             moreBtns.forEach(i => {
-                navRightMore.appendChild(generateRightButton(page, i));
+                navRightMore.appendChild(generateRightButton(page, i, true));
             });
             hnav.appendChild(navRightMore);
         }
 
         let place;
-        if (document.getElementById(page.id).querySelector('.pageContainer')) {
-            place = document.getElementById(page.id).querySelector('.pageContainer');
-        } else {
-            place = document.createElement('div');
-            place.className = 'pageContainer';
-            document.getElementById(page.id).prepend(place);
-        }
-        place.prepend(hnav);
-        place.prepend(head);
+        try {
+            if (document.getElementById(page.id).querySelector('.pageContainer')) {
+                place = document.getElementById(page.id).querySelector('.pageContainer');
+            } else {
+                place = document.createElement('div');
+                place.className = 'pageContainer';
+                document.getElementById(page.id).prepend(place);
+            }
+            place.prepend(hnav);
+            place.prepend(head);
+        } catch(e) {}
     }
 
     createNavDownButton(page) {
@@ -222,7 +228,7 @@ class Nav {
     }
 
     createNav(pages) {
-        const MAX_NAVDOWN = 4;
+        const MAX_NAVDOWN = window.eelib?.nav?.maxDown || 4;
         
         // === РАБОТА С КОНТЕЙНЕРОМ "ЕЩЁ" ===
         const modalDiv = document.createElement('div');
@@ -238,7 +244,7 @@ class Nav {
         modalDiv.appendChild(modalForuse);
         modalForuse.appendChild(modalContent);
 
-        // завершить создание и включение стилей
+        const navDownEl = document.getElementById('navdown')
 
         // Фильтруем страницы для нижней панели
         const bottomPages = pages.filter(p => !p.noBottom);
@@ -248,13 +254,20 @@ class Nav {
         let addedDirect = 0;
         let overflowCount = 0;
 
+        if (window.eelib?.nav?.downStyle) {
+            navDownEl.classList.add(window.eelib.nav.downStyle)
+            document.body.classList.add('nav-' + window.eelib.nav.downStyle)
+        }
+        if (window.eelib?.nav?.noName === true) navDownEl.classList.add('noname')
+        if (window.eelib?.nav?.noIcon === true) navDownEl.classList.add('noicon')
+
         for (const page of pages) {
             // === СОЗДАНИЕ ОСНОВНОЙ КНОПКИ НАВИГАЦИИ ===
             const btn = document.createElement('button');
             btn.classList.add('navbtn');
             if (page.active) btn.classList.add('active');
             if (page.active) document.getElementById(page.id).classList.add('active');
-            console.log(page.id, page.active);
+            if (page.active) console.log('active page: ' + page.id);
             btn.innerHTML = `<img src="${page.icon}" alt=""><span>${page.title}</span>`;
             btn.id = `${page.id}-navc`;
             
@@ -268,7 +281,7 @@ class Nav {
             if (page.id === 'settings') {
                 window.cnavMgr.nav.appendChild(btn);
             } else {
-                window.cnavMgr.navContent.appendChild(btn);
+                if (!page.noLeft) window.cnavMgr.navContent.appendChild(btn);
             }
 
             // === ОБРАБОТКА НИЖНЕЙ ПАНЕЛИ ===
@@ -286,14 +299,15 @@ class Nav {
                     moreBtn.onclick = () => {
                         // Снимаем активные состояния
                         document.querySelectorAll('.navbtn.active').forEach(el => el.classList.remove('active'));
-                        
+                        this.content.classList.remove('modal-open')
+
                         // Переключаем страницу
-                        switchPage(document.getElementById(page.id));
+                        switchPage(document.getElementById(page.id))
                         
                         // Закрываем модальное окно
-                        const modalWindow = modalDiv.closest('.modal');
+                        const modalWindow = modalDiv.closest('.modal')
                         if (modalWindow) {
-                            modalWindow.classList.remove('active');
+                            modalWindow.classList.remove('active')
                         }
                     };
                     
@@ -314,16 +328,15 @@ class Nav {
             moreNavBtn.id = 'more-nav-btn';
             
             moreNavBtn.onclick = () => {
-                // Открываем модальное окно
-                const modalWindow = modalDiv.closest('.modal');
+                const modalWindow = modalDiv.closest('.modal')
                 if (modalWindow) {
-                    modalWindow.classList.toggle('active');
+                    modalWindow.classList.toggle('active')
                 }
-                this.content.classList.toggle('modal-open');
+                if (modalWindow.classList.contains('active')) this.content.classList.add('modal-open')
+                    else this.content.classList.remove('modal-open')
                 
-                // Визуальная обратная связь (опционально)
-                //document.querySelectorAll('.navbtn.active').forEach(el => el.classList.remove('active'));
-                moreNavBtn.classList.toggle('active');
+                //document.querySelectorAll('.navbtn.active').forEach(el => el.classList.remove('active'))
+                moreNavBtn.classList.toggle('active')
             };
             
             window.cnavMgr.navDown.appendChild(moreNavBtn); // Предполагается, что navDown — контейнер нижней панели
@@ -358,80 +371,105 @@ class Nav {
         }
     }
 
-    switchPage(newpage) {
-        const rightCurrent = document.querySelector('.page.active.right');
-        const current = rightCurrent? rightCurrent : document.querySelector('.page.active');
-        if (!newpage || newpage === current) {
-            if (rightCurrent) {
-                const parentPage = document.querySelector('.page.active:not(.right)');
-                parentPage.classList.remove('active', 'right');
-                parentPage.classList.add('leave-left')
+    switchPage(newpage, subname) {
+        try {
+            window.cnavMgr.lastestPage = document.querySelector('.page.active:not(.right)')?.id;
+            window.cnavMgr.currentPage = newpage.id;
+            const rightCurrent = document.querySelector('.page.active.right');
+            const current = rightCurrent? rightCurrent : document.querySelector('.page.active');
+            if (!newpage || newpage === current) {
+                if (rightCurrent && (subname == null || subname === rightCurrent.dataset.currentSubname)) {
+                    const parentPage = document.querySelector('.page.active:not(.right)');
+                    parentPage.classList.remove('active', 'right');
+                    parentPage.classList.add('leave-left')
+                    content.classList.remove('two', 'twomodal');
+                    current.classList.remove('right');
+                    current.dataset.currentSubname = null
+                    return;
+                } else if (subname != null && rightCurrent && subname != rightCurrent.dataset.currentSubname) {
+                    rightCurrent.dataset.currentSubname = subname
+                } else {
+                    return;
+                }
+            }
+
+            // если сейчас активна подстраница — берём её родителя
+            const parentElement = document.getElementById(current?.dataset?.parent); 
+            const basePage = current?.dataset?.parent && parentElement?.classList.contains('active')
+                ? document.getElementById(current.dataset.parent)
+                : current;
+
+            const basePageData = window.cnavMgr.pages.find(p => p.id === basePage.id);
+            const newPageData  = window.cnavMgr.pages.find(p => p.id === newpage.id);
+
+            const navdown = document.getElementById('navdown')
+            if (navdown) {
+                if (newPageData.noNav === true) {
+                    if (!navdown.classList.contains('hidden'))
+                        navdown.classList.add('hidden')
+                    window.ThemesMgr.hideBlackDown(true)
+                } else {
+                    navdown.classList.remove('hidden')
+                    window.ThemesMgr.hideBlackDown(false)
+                }
+            }
+
+            let isSubpage = isMobile? false : Array.isArray(basePageData?.subpages) ? basePageData.subpages.includes(newpage.id) : false;
+
+            if (!isSubpage) {
+                // обычная смена страниц
+                current.classList.remove('active', 'right');
+                current.classList.add('leave-left');
+                const lastToHide = document.querySelector('.page.active')
+                if (lastToHide) {
+                    lastToHide.classList.remove('active', 'right');
+                    lastToHide.classList.add('leave-left')
+                }
+
                 content.classList.remove('two', 'twomodal');
-                current.classList.remove('right');
-                return;
+                document.querySelector('.page.active.right')?.classList.remove('active');
             } else {
-                return;
-            }
-        }
+                // открываем подстраницу справа
+                content.classList.add(basePageData.subpagesmode == 'modal' ? 'twomodal' : 'two');
 
-        // если сейчас активна подстраница — берём её родителя
-        const parentElement = document.getElementById(current?.dataset?.parent); 
-        const basePage = current?.dataset?.parent && parentElement?.classList.contains('active')
-            ? document.getElementById(current.dataset.parent)
-            : current;
+                // убираем старую подстраницу, если была
+                document.querySelectorAll('.page.right.active').forEach(p => {
+                    p.classList.remove('active', 'right');
+                    p.classList.add('leave-right');
+                });
 
-        const basePageData = window.cnavMgr.pages.find(p => p.id === basePage.id);
-        let isSubpage = isMobile? false : Array.isArray(basePageData?.subpages) ? basePageData.subpages.includes(newpage.id) : false;
-
-        if (!isSubpage) {
-            // обычная смена страниц
-            current.classList.remove('active', 'right');
-            current.classList.add('leave-left');
-            const lastToHide = document.querySelector('.page.active')
-            if (lastToHide) {
-                lastToHide.classList.remove('active', 'right');
-                lastToHide.classList.add('leave-left')
+                
+                newpage.classList.add('right');
+                newpage.dataset.currentSubname = subname
+                newpage.dataset.parent = basePage.id;
             }
 
-            content.classList.remove('two', 'twomodal');
-            document.querySelector('.page.active.right')?.classList.remove('active');
-        } else {
-            // открываем подстраницу справа
-            content.classList.add(basePageData.subpagesmode == 'modal' ? 'twomodal' : 'two');
+            newpage.classList.remove('leave-left', 'leave-right');
+            newpage.classList.add('active');
 
-            // убираем старую подстраницу, если была
-            document.querySelectorAll('.page.right.active').forEach(p => {
-                p.classList.remove('active', 'right');
-                p.classList.add('leave-right');
-            });
+            if (!isSubpage) {
+                document.querySelectorAll('.navbtn.active').forEach(el => {
+                    el.classList.remove('active');
+                });
 
-            newpage.classList.add('right');
-            newpage.dataset.parent = basePage.id; // помечаем родителя
-        }
+                document.getElementById(`${newpage.id}-navc`)?.classList.add('active');
+                document.getElementById(`${newpage.id}-navd`)?.classList.add('active');
 
-        newpage.classList.remove('leave-left', 'leave-right');
-        newpage.classList.add('active');
+                setTimeout(() => {
+                    current.classList.remove('leave-left', 'leave-right');
+                }, 400);
+            }
 
-        if (!isSubpage) {
-            document.querySelectorAll('.navbtn.active').forEach(el => {
-                el.classList.remove('active');
-            });
-
-            document.getElementById(`${newpage.id}-navc`)?.classList.add('active');
-            document.getElementById(`${newpage.id}-navd`)?.classList.add('active');
-
-            setTimeout(() => {
-                current.classList.remove('leave-left', 'leave-right');
-            }, 400);
-        }
-
-        if (isMobile && document.getElementById('nav').classList.contains('active')) {
-            openNavPanel();
+            if (isMobile && document.getElementById('nav').classList.contains('active')) {
+                openNavPanel();
+            }
+        } catch(e) {
+            window.notification.error('Ошибка страницы', e)
         }
     }
 
-    changePage(newpage) {
-        switchPage(document.getElementById(newpage));
+    changePage(newpage, subname) {
+        switchPage(document.getElementById(newpage), subname);
     }
 
     handleOutsideClick(event) {
@@ -497,12 +535,4 @@ class Nav {
     };
 }
 
-console.log('Инициализация NavManager...');
 window.cnavMgr = new Nav();
-console.log('NavManager инициализирован:', window.cnavMgr);
-
-window.switchPage   = window.cnavMgr.switchPage;
-window.changePage   = window.cnavMgr.changePage;
-window.createNav    = window.cnavMgr.createNav;
-window.openNavPanel = window.cnavMgr.openNavPanel;
-window.returnToPage = window.cnavMgr.returnToPage

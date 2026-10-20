@@ -89,8 +89,10 @@ body {
     padding: 0 1rem;
     flex: 1;
 }
-#div-hours .card {
+#div-hours .card, #div-days .card {
     justify-content: flex-end;
+    margin: 0;
+    padding: 0 var(--ds);
 }
 
 .bar {

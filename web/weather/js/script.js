@@ -4,149 +4,149 @@ let data = null;
 
 const weatherTypes = {
     0: {
-        ico: "ico/gg/sunny.webp",
-        ico_night: "ico/gg/clear_night.webp",
+        ico: "img/ico/gg/sunny.webp",
+        ico_night: "img/ico/gg/clear_night.webp",
         en: "Clear sky",
         ru: "Ясно",
     },
     1: {
-        ico: "ico/gg/mostly_sunny.webp",
-        ico_night: "ico/gg/mostly_clear_night.webp",
+        ico: "img/ico/gg/mostly_sunny.webp",
+        ico_night: "img/ico/gg/mostly_clear_night.webp",
         en: "Mainly clear",
         ru: "Преимущественно солнечно",
     },
     2: {
-        ico: "ico/gg/partly_cloudy.webp",
-        ico_night: "ico/gg/partly_cloudy_night.webp",
+        ico: "img/ico/gg/partly_cloudy.webp",
+        ico_night: "img/ico/gg/partly_cloudy_night.webp",
         en: "Partly cloudy",
         ru: "Частично облачно",
     },
     3: {
-        ico: "ico/gg/cloudy.webp",
-        ico_night: "ico/gg/mostly_cloudy_night.webp",
+        ico: "img/ico/gg/cloudy.webp",
+        ico_night: "img/ico/gg/mostly_cloudy_night.webp",
         en: "Overcast",
         ru: "Пасмурно",
     },
     45: {
-        ico: "ico/gg/haze_fog_dust_smoke.webp",
+        ico: "img/ico/gg/haze_fog_dust_smoke.webp",
         en: "Fog",
         ru: "Туман",
     },
     48: {
-        ico: "ico/gg/haze_fog_dust_smoke.webp",
+        ico: "img/ico/gg/haze_fog_dust_smoke.webp",
         en: "Fog",
         ru: "Холодный туман",
     },
     51: {
-        ico: "ico/gg/drizzle.webp",
+        ico: "img/ico/gg/drizzle.webp",
         en: "Sunny",
         ru: "Легко моросит",
     },
     53: {
-        ico: "ico/gg/showers_rain.webp",
+        ico: "img/ico/gg/showers_rain.webp",
         en: "Sunny",
         ru: "Умеренно моросит",
     },
     55: {
-        ico: "ico/gg/scattered_showers_day.webp",
-        ico_night: "ico/gg/scattered_showers_night.webp",
+        ico: "img/ico/gg/scattered_showers_day.webp",
+        ico_night: "img/ico/gg/scattered_showers_night.webp",
         en: "Sunny",
         ru: "Сильно моросит",
     },
     56: {
-        ico: "ico/gg/freezing_rain.webp",
+        ico: "img/ico/gg/freezing_rain.webp",
         en: "Freezing rain",
         ru: "Морозный дождь",
     },
     57: {
-        ico: "ico/gg/freezing_rain.webp",
+        ico: "img/ico/gg/freezing_rain.webp",
         en: "Heavy freezing rain",
         ru: "Сильный морозный дождь",
     },
     61: {
-        ico: "ico/gg/showers_rain.webp",
+        ico: "img/ico/gg/showers_rain.webp",
         en: "Low rain",
         ru: "Слабый дождь",
     },
     63: {
-        ico: "ico/gg/heavy_rain.webp",
+        ico: "img/ico/gg/heavy_rain.webp",
         en: "Moderete rain",
         ru: "Дождь",
     },
     65: {
-        ico: "ico/gg/heavy_rain.webp",
+        ico: "img/ico/gg/heavy_rain.webp",
         en: "Heavy rain",
         ru: "Сильный дождь",
     },
     66: {
-        ico: "ico/gg/freezing_rain.webp",
+        ico: "img/ico/gg/freezing_rain.webp",
         en: "Freezing rain",
         ru: "Морозный дождь",
     },
     67: {
-        ico: "ico/gg/freezing_rain.webp",
+        ico: "img/ico/gg/freezing_rain.webp",
         en: "Heavy freezing rain",
         ru: "Сильный морозный дождь",
     },
     71: {
-        ico: "ico/gg/light_snow.webp",
+        ico: "img/ico/gg/light_snow.webp",
         en: "Light snowfall",
         ru: "Лёгкий снегопад",
     },
     73: {
-        ico: "ico/gg/moderate_snow.webp",
+        ico: "img/ico/gg/moderate_snow.webp",
         en: "Snowfall",
         ru: "Снегопад",
     },
     75: {
-        ico: "ico/gg/heavy_snow.webp",
+        ico: "img/ico/gg/heavy_snow.webp",
         en: "Heavy snowfall",
         ru: "Сильный снегопад",
     },
     77: {
-        ico: "ico/gg/snow_showers_snow.webp",
+        ico: "img/ico/gg/snow_showers_snow.webp",
         en: "Snow grains",
         ru: "Снежная крупа",
     },
     80: {
-        ico: "ico/gg/showers_rain.webp",
+        ico: "img/ico/gg/showers_rain.webp",
         en: "Light rain showers",
         ru: "Лёгкий ливень",
     },
     81: {
-        ico: "ico/gg/heavy_rain_showers.webp",
+        ico: "img/ico/gg/heavy_rain_showers.webp",
         en: "Rain showers",
         ru: "Ливень",
     },
     82: {
-        ico: "ico/gg/extreme_rain_showers.webp",
+        ico: "img/ico/gg/extreme_rain_showers.webp",
         en: "Heavy rain showers",
         ru: "Сильный ливень",
     },
     85: {
-        ico: "ico/gg/snow_showers_snow.webp",
+        ico: "img/ico/gg/snow_showers_snow.webp",
         en: "Snow showers",
         ru: "Метель",
     },
     86: {
-        ico: "ico/gg/snow_showers_snow.webp",
+        ico: "img/ico/gg/snow_showers_snow.webp",
         en: "Heavy snow showers",
         ru: "Сильная метель",
     },
     95: {
-        ico: "ico/gg/isolated_scattered_tstorms_day.webp",
-        ico_night: "ico/gg/isolated_scattered_tstorms_night.webp",
+        ico: "img/ico/gg/isolated_scattered_tstorms_day.webp",
+        ico_night: "img/ico/gg/isolated_scattered_tstorms_night.webp",
         en: "Thunderstorm",
         ru: "Гроза",
     },
     96: {
-        ico: "ico/gg/isolated_scattered_tstorms_day.webp",
-        ico_night: "ico/gg/isolated_scattered_tstorms_night.webp",
+        ico: "img/ico/gg/isolated_scattered_tstorms_day.webp",
+        ico_night: "img/ico/gg/isolated_scattered_tstorms_night.webp",
         en: "Thunderstorm with slight hail",
         ru: "Гроза с небольшим градом",
     },
     99: {
-        ico: "ico/gg/strong_tstorms.webp",
+        ico: "img/ico/gg/strong_tstorms.webp",
         en: "Thunderstorm with heavy hail",
         ru: "гроза с сильным градом",
     },
@@ -218,13 +218,27 @@ function getData(n = 0) {
 /* ---------- FETCH ---------- */
 
 async function fetchFromFile() {
-    if (window.bridge.env != "Android") return;
+    if (window.bridge?.env !== "Android") return null;
+    try {
+        const raw = await window.bridge.readFile('savedWeather.json');
+        if (!raw) return null;
+        const saved = JSON.parse(raw);
+        return Array.isArray(saved) ? saved : [saved];
+    } catch (e) {
+        console.error("Не удалось прочитать savedWeather.json:", e);
+        return null;
+    }
+}
 
-    const saved = JSON.parse(
-        await window.bridge.readFile('savedWeather.json')
-    );
-
-    return Array.isArray(saved) ? saved : [saved];
+function fetchWeatherFromLocalstorage() {
+    try {
+        const saved = localStorage.getItem("WeatherAll");
+        if (!saved) return null;
+        const parsed = JSON.parse(saved);
+        return Array.isArray(parsed) ? parsed : [parsed];
+    } catch (e) {
+        return null;
+    }
 }
 
 async function fetchWeather(lat, lon, city) {
@@ -237,10 +251,7 @@ async function fetchWeather(lat, lon, city) {
         `&timezone=auto&forecast_days=7`;
         
     if (!navigator.onLine) {
-        const saved = localStorage.getItem("WeatherAll");
-        if (!saved) return null;
-        const parsed = JSON.parse(saved);
-        return Array.isArray(parsed) ? parsed : [parsed];
+        return fetchWeatherFromLocalstorage()
     }
 
     try {
@@ -267,33 +278,51 @@ async function updateAll() {
     if (globalLat == null || globalLon == null) return;
 
     let fetchedData;
-    const savedData = await fetchFromFile();
-    if (savedData && ((new Date()).getTime() - savedData.current.time * 1000 < 300000 || !navigator.onLine)) {
-        fetchedData = savedData;
-        if (window.notification) window.notification.success('saved');
+    const isAndroid = window.bridge?.env === "Android";
+    const savedData = isAndroid ? await fetchFromFile() : fetchWeatherFromLocalstorage();
+
+    const isFresh = savedData && savedData[0]?.current &&
+        (Date.now() - savedData[0].current.time * 1000 < 300000);
+
+    if (savedData && savedData[0] && (isFresh || !navigator.onLine)) {
+        const prepared = savedData;
+        const h = prepared[0].hourly;
+        const owd = prepared[0].current;
+
+        // ближайший час (индекс — число, а не строка)
+        const nowSec = Math.floor(Date.now() / 1000);
+        let idx = 0, minDiff = Infinity;
+        h.time.forEach((ts, i) => {
+            const d = Math.abs(nowSec - ts);
+            if (d < minDiff) { minDiff = d; idx = i; }
+        });
+
+        const hr = new Date().getHours();
+        prepared[0].current = {
+            ...owd,
+            temperature_2m: h.temperature_2m[idx],
+            apparent_temperature: h.temperature_2m[idx],
+            precipitation: h.precipitation[idx],
+            weather_code: h.weather_code[idx],
+            time: h.time[idx],
+            is_day: (hr > 19 || hr < 6) ? 0 : 1,
+        };
+
+        fetchedData = prepared;
     } else {
         fetchedData = await fetchWeather(globalLat, globalLon, globalCity);
-        if (fetchedData && window.bridge) {
-            const weatherArray = Array.isArray(fetchedData) ? fetchedData : [fetchedData];
-
-            window.bridge.writeFile(
-                'savedWeather.json',
-                JSON.stringify(weatherArray, null, 2)
-            );
+        if (fetchedData && window.bridge?.writeFile) {
+            const arr = Array.isArray(fetchedData) ? fetchedData : [fetchedData];
+            window.bridge.writeFile('savedWeather.json', JSON.stringify(arr, null, 2));
         }
     }
     if (!fetchedData) return;
 
     data = Array.isArray(fetchedData) ? fetchedData : [fetchedData];
-
     const currentData = getData(0);
     if (!currentData) return;
 
-    console.log(currentData);
-
-    // текущая погода
     NOWrenderCurrent(currentData.current, currentData);
-
     renderHourly(currentData.hourly);
     renderImportantTimes(currentData.hourly);
     renderDaily(currentData.daily);
@@ -357,7 +386,7 @@ function renderImportantTimes(hourly) {
             
             const temp = Math.round(hourly.temperature_2m[matchingIndex]);
             const weatherCode = hourly.weather_code[matchingIndex];
-            const weatherIconThis = weatherIcon(weatherCode, hour < 6 || hour > 19 ? 0 : 1) || 'ico/gg/sunny.webp';
+            const weatherIconThis = weatherIcon(weatherCode, hour < 6 || hour > 19 ? 0 : 1) || 'img/ico/gg/sunny.webp';
             
             card.innerHTML = `
                 <div class="time">${timeStr}</div>
@@ -471,7 +500,9 @@ function getAppSettings() {
 
 /* ---------- CUSTOM DROPDOWN ---------- */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await window.waitForVariable(() => window.eelibMgr.isLoaded, true, 10)
+
     const container = document.createElement('div')
     container.id = 'city-select-custom'
     document.querySelector('#home .page-header').appendChild(container)
