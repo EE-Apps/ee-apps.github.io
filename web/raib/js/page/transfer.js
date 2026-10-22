@@ -66,6 +66,11 @@ function initTransferPage() {
 }
 window.initTransferPage = initTransferPage;
 
+window.setReciverAndChangePage = function (reciver) {
+    receiverDropdown.setValue(String(reciver))
+    window.pages.switch('ptransfer')
+}
+
 async function handleTransferSubmit() {
     // Проверяем авторизацию
     if (!window.userid) {

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/page/registration.css">
     <link rel="stylesheet" href="css/page/login.css">
     <link rel="stylesheet" href="css/page/transfer.css">
+    <link rel="stylesheet" href="css/page/users.css">
     <link rel="stylesheet" href="css/mobile.css">
     <script src="eelibs/import.js" type="module"></script>
     <script src="eelibs/js/dropdown.js"></script>
@@ -26,6 +27,7 @@
         <a href="#about"><img src="img/ui/exchange.svg"><p>Trades</p></a>
         <div class="separator"></div-->
         <a href="#transfer" onclick="pages.switch('ptransfer')" class="navbtn" id="ptransfer-btn"><img src="img/ui/exchange.svg"><p>Transfer</p></a>
+        <a href="#users" onclick="pages.switch('pusers')" class="navbtn" id="pusers-btn"><img src="img/ui/user.svg"><p>Users</p></a>
         <a href="#settings" onclick="pages.switch('psettings')" class="navbtn" id="psettings-btn"><img src="img/ui/settings.svg"><p>Settings</p></a>
     </nav>
     <div id="content">
@@ -100,6 +102,20 @@
             </div>
             <div id="phistory" class="page">
                 <div id="historys" class="history-list"></div>
+            </div>
+            <div id="pusers" class="page">
+                <div id="usersHeader">
+                    <h2>Total: <b id="totalMoney"></b> IRR
+                        <button onclick="window.showUserHistory('all')" style="margin-left: auto;"><img src="img/ui/time.svg"></button>
+                    </h2>
+                </div>
+                <div id="userslist"></div>
+            </div>
+            <div id="pusershistory" class="page">
+                <div id="usersHeader">
+                    <h2>Total: <b id="totalOperations"></b> operations - <b id="totalOperationsSum"></b> IRR</h2>
+                </div>
+                <div id="userOperationsList" class="history-list"></div>
             </div>
             <div id="pbudget" class="page">
                 <div id="budget-data">

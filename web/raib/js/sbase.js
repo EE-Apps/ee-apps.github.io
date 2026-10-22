@@ -20,6 +20,7 @@ window.supabase = supabase;
 if (localStorage.getItem('raib-user')) window.userid = Number(localStorage.getItem('raib-user'));
 else window.userid = null;
 window.admin = false;
+window.totalMoney = 0
 
 window.usersList;
 window.historyList;
@@ -40,14 +41,24 @@ async function loadUsers() {
         window.usersList[user.id] = user;
     });
 
-    const ul = document.getElementById('users')
+    const ul = document.getElementById('userslist')
     ul.innerHTML = ''
 
     data.forEach(user => {
-        const li = document.createElement('li')
-        li.textContent = `ID: ${user.id}, Name: ${user.name}, Discord: ${user.discord_id}, Balance: ${user.balance}`
+        const li = document.createElement('div')
+        li.className = `userCard ${window.userid === user.id ? 'current' : ''}`
+        li.innerHTML = `<h2 class="uname"><div class="uid">${user.id}</div> ${user.name}</h2>
+            <!--b>Discord: ${user.discord_id}</b-->
+            <div class="usecrow">Balance: ${user.balance}<div class="ubtns">
+                <button onclick="window.showUserHistory(${user.id})"><img src="img/ui/what.svg"></button>
+                <button onclick="window.setReciverAndChangePage('${user.id}')" class="sent"><img src="img/ui/arrow/right.svg"></button>
+            </div></div>`
         ul.appendChild(li)
+
+        window.totalMoney = window.totalMoney + user.balance
     })
+
+    document.getElementById('totalMoney').textContent = window.totalMoney
 
     if (window.userid) {
         const currentUser = data.find(u => u.id === window.userid)
@@ -63,42 +74,64 @@ async function loadUsers() {
     window.initTransferPage();
 }
 
-async function loadHistory() {
-    const { data, error } = await supabase
-        .from('transfers')
-        .select('*')
-        .order('id', { ascending: false });
+async function loadHistory(contId = 'historys', user = window.userid) {
+    let data, error
+
+    // 1. Исправлено получение из кэша / базы данных
+    if (window.historyList?.length > 0) {
+        data = window.historyList
+    } else {
+        // 🔐 БЕЗОПАСНОСТЬ: Обычный пользователь запрашивает ТОЛЬКО свои транзакции
+        let query = supabase.from('transfers').select('*')
+        
+        /*if (window.admin !== true) {
+            query = query.or(`from_account.eq.${user},to_account.eq.${user}`)
+        }*/
+
+        const res = await query.order('id', { ascending: false })
+        data = res.data
+        error = res.error
+    }
 
     if (error) {
-        console.error('Ошибка при получении транзакций:', error);
-        notification.error('Load History', 'Failed to load transfer history');
-        return;
-    }
-    
-    window.historyList = data;
+        console.error('Ошибка при получении транзакций:', error)
+        notification.error('Load History', 'Failed to load transfer history')
+        return null // Возвращаем null, чтобы предотвратить дальнейшие ошибки
+    } else window.historyList = data
 
-    const container = document.getElementById('historys');
-    container.innerHTML = '';
+    const container = document.getElementById(contId)
+    if (!container) return null
+    container.innerHTML = ''
 
-    // 🔐 фильтрация по правам
-    const visibleTransfers = window.admin === true
+    // Фильтрация для отображения (если данные пришли из кэша, где лежит всё)
+    const visibleTransfers = user === 'all' ? data : window.admin === true
         ? data
-        : data.filter(t =>
-            t.from_account === window.userid ||
-            t.to_account === window.userid
-        );
+        : data.filter(t => t.from_account === user || t.to_account === user)
 
     if (!visibleTransfers.length) {
-        const empty = document.createElement('div');
-        empty.className = 'history-empty';
-        empty.textContent = 'No transfers available';
-        container.appendChild(empty);
-        return;
+        const empty = document.createElement('div')
+        empty.className = 'history-empty'
+        empty.textContent = 'No transfers available'
+        container.appendChild(empty)
+        return { operationsNum: 0, operationsSum: 0 }
     }
 
+    let operationsSum = 0
+    
     visibleTransfers.forEach(t => {
-        const item = document.createElement('div');
-        item.className = 'history-item';
+        const item = document.createElement('div')
+        item.className = 'history-item'
+
+        // Определяем, уходят деньги от просматриваемого юзера или приходят
+        const isOutgoing = t.from_account === user 
+        
+        // Корректный подсчет баланса (минус если ушли, плюс если пришли)
+        //operationsSum += isOutgoing ? -t.amount : t.amount
+        operationsSum += Math.abs(t.amount)
+
+        // Безопасная проверка существования имен пользователей в usersList
+        const fromName = usersList[t.from_account]?.name || `User #${t.from_account}`
+        const toName = usersList[t.to_account]?.name || `User #${t.to_account}`
 
         item.innerHTML = `
             <div class="history-row history-header">
@@ -111,17 +144,17 @@ async function loadHistory() {
             <div class="history-row">
                 <div class="history-col">
                     <span class="label">From</span>
-                    <span class="value">${usersList[t.from_account].name}</span>
+                    <span class="value">${fromName}</span>
                 </div>
                 <div class="history-col">
                     <span class="label">To</span>
-                    <span class="value">${usersList[t.to_account].name}</span>
+                    <span class="value">${toName}</span>
                 </div>
             </div>
 
             <div class="history-row">
-                <div class="history-amount ${t.from_account === window.userid ? 'out' : 'in'}">
-                    ${t.from_account === window.userid ? '-' : '+'}${t.amount}
+                <div class="history-amount ${isOutgoing ? 'out' : 'in'}">
+                    ${isOutgoing ? '-' : '+'}${t.amount}
                 </div>
             </div>
 
@@ -130,10 +163,30 @@ async function loadHistory() {
                     ${t.type ? `${t.type} - ${t.comment}` : t.comment}
                 </div>
             ` : ''}
-        `;
+        `
 
-        container.appendChild(item);
-    });
+        container.appendChild(item)
+    })
+
+    return { 
+        operationsNum: visibleTransfers.length, 
+        operationsSum: operationsSum,
+    }
+}
+
+window.showUserHistory = async function (user) {
+    const result = await loadHistory('userOperationsList', user)
+    
+    // Проверка на случай ошибки внутри loadHistory
+    if (!result) return 
+
+    const { operationsNum, operationsSum } = result
+
+    window.pages.switch('pusershistory')
+    document.getElementById('totalOperations').textContent = operationsNum
+    
+    // Красивое отображение знака валюты/минуса
+    document.getElementById('totalOperationsSum').textContent = Math.round(operationsSum > 0 ? `+${operationsSum}` : operationsSum)
 }
 
 window.loadUsers = loadUsers;
