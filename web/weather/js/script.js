@@ -274,7 +274,7 @@ async function fetchWeather(lat, lon, city) {
 
 /* ---------- RENDER ---------- */
 
-async function updateAll() {
+async function updateAll(isNewCity = false) {
     if (globalLat == null || globalLon == null) return;
 
     let fetchedData;
@@ -284,7 +284,7 @@ async function updateAll() {
     const isFresh = savedData && savedData[0]?.current &&
         (Date.now() - savedData[0].current.time * 1000 < 300000);
 
-    if (savedData && savedData[0] && (isFresh || !navigator.onLine)) {
+    if (savedData && savedData[0] && (isFresh || !navigator.onLine) && isNewCity != true) {
         const prepared = savedData;
         const h = prepared[0].hourly;
         const owd = prepared[0].current;
@@ -712,10 +712,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         globalLat = city.lat;
         globalLon = city.lon;
         globalCity = city.value;
-        let appSettings = JSON.parse(localStorage.getItem("appSettings"));
-        appSettings.weather.townName = value;
-        localStorage.setItem("appSettings", JSON.stringify(appSettings));
-        updateAll();
+        window.settingsManager.set('weather.townName', value);
+        updateAll(true);
+        window.settingsManager.save()
     }
 
     dropdown.addEventListener("change", e => applyCity(e.detail.value));
