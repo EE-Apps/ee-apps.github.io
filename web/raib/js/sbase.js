@@ -50,7 +50,7 @@ async function loadUsers() {
         li.innerHTML = `<h2 class="uname"><div class="uid">${user.id}</div> ${user.name}</h2>
             <!--b>Discord: ${user.discord_id}</b-->
             <div class="usecrow">Balance: ${user.balance}<div class="ubtns">
-                <button onclick="window.showUserHistory(${user.id})"><img src="img/ui/what.svg"></button>
+                <button onclick="window.showUserHistory(${user.id})"><img src="img/ui/time.svg"></button>
                 <button onclick="window.setReciverAndChangePage('${user.id}')" class="sent"><img src="img/ui/arrow/right.svg"></button>
             </div></div>`
         ul.appendChild(li)
