@@ -40,6 +40,14 @@ window.eelib.settingsConfig = {
         main: {
             theme: "dark",
         },
+        weather: {
+            showImportantTimes: true,
+        },
+        importantTimes: {
+            time1: '8:00',
+            time2: '14:00',
+            time3: '22:00',
+        },
     },
     schema: {
         clock: {
@@ -59,7 +67,12 @@ window.eelib.settingsConfig = {
             title: "Weather",
             items: [
                 { type: "toggle", key: "background", label: "Weather Background" },
-                { type: "toggle", key: "pageBackground", label: "Page Background" }
+                { type: "toggle", key: "pageBackground", label: "Page Background" },
+                {
+                    type: "toggle",
+                    key: "showImportantTimes",
+                    label: "Show 1-3 Important Times"
+                }
             ]
         },
         main: {
@@ -70,6 +83,26 @@ window.eelib.settingsConfig = {
                     key: "theme",
                     label: "Theme",
                     options: { "dark": "Dark", "light": "Light", "oled": "Black OLED" }
+                },
+            ]
+        },
+        importantTimes: {
+            title: "Important Times",
+            items: [
+                {
+                    type: "text",
+                    key: "time1",
+                    label: "Time 1",
+                },
+                {
+                    type: "text",
+                    key: "time2",
+                    label: "Time 2",
+                },
+                {
+                    type: "text",
+                    key: "time3",
+                    label: "Time 3",
                 },
             ]
         },

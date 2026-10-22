@@ -142,10 +142,8 @@ body {
 
 #city-select-custom, .custom-dd {
     border-radius: var(--br);
-    position: absolute;
-    bottom: var(--ds);
-    right: var(--ds);
-    height: min-content;
+    position: static;
+    height: max-content;
     z-index: 500;
     width: min(100%, 200px);
 
@@ -163,6 +161,15 @@ body {
         padding: var(--dss) var(--ds);
         background-color: var(--bg-input-great);
     }
+
+    img {
+        width: max-content;
+    }
+}
+#city-select-custom {
+    position: absolute;
+    bottom: var(--ds);
+    right: var(--ds);
 }
 
 /*.page.active {

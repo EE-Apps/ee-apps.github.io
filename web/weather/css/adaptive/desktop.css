@@ -60,8 +60,8 @@
     }
 
     #city-select-custom {
-        top: calc(var(--ds2) + 50px);
-        left: var(--ds2);
+        top: var(--ds);
+        left: var(--ds);
         right: unset;
         bottom: unset;
 

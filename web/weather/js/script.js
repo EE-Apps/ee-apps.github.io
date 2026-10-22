@@ -331,12 +331,12 @@ async function updateAll() {
 /* ---------- IMPORTANT TIMES ---------- */
 
 function renderImportantTimes(hourly) {
-    const settings = settingsManager ? settingsManager.get('weather') : {};
-    const container = document.getElementById('important-times-weather');
+    const settings = settingsManager ? settingsManager.get('weather') : {}
+    const container = document.getElementById('important-times-weather')
     
     if (!settings.showImportantTimes) {
-        container.style.display = 'none';
-        return;
+        container.style.display = 'none'
+        return
     }
 
     const importantTimesSettings = settingsManager ? settingsManager.get('importantTimes') : {};
