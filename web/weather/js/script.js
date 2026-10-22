@@ -351,10 +351,29 @@ function renderImportantTimes(hourly) {
         return;
     }
 
+    const now = new Date();
+    const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
+    let isTomorrowShowed = false
+
+    // время от ближайшего к дальнему относительно текущего
+    const sortedTimes = times.sort((a, b) => {
+        const [hourA, minuteA] = a.split(':').map(Number);
+        const [hourB, minuteB] = b.split(':').map(Number);
+
+        let minsA = hourA * 60 + minuteA;
+        let minsB = hourB * 60 + minuteB;
+
+        // Еесли не сегодня - добавляем к времени 24 часа (завтра)
+        if (minsA < currentTotalMinutes) minsA += 24 * 60;
+        if (minsB < currentTotalMinutes) minsB += 24 * 60;
+
+        return minsA - minsB;
+    });
+
     container.style.display = 'flex';
     container.innerHTML = '';
 
-    times.forEach(timeStr => {
+    sortedTimes.forEach(timeStr => {
         const [hour, minute] = timeStr.split(':').map(Number);
         
         // Найти ближайший временной слот в почасовом прогнозе
@@ -370,7 +389,6 @@ function renderImportantTimes(hourly) {
         });
 
         if (matchingIndex === -1) {
-            // Если точного совпадения нет, ищем ближайший час
             hourly.time.forEach((t, i) => {
                 const forecastHour = new Date(t * 1000).getHours();
                 
@@ -387,13 +405,25 @@ function renderImportantTimes(hourly) {
             const temp = Math.round(hourly.temperature_2m[matchingIndex]);
             const weatherCode = hourly.weather_code[matchingIndex];
             const weatherIconThis = weatherIcon(weatherCode, hour < 6 || hour > 19 ? 0 : 1) || 'img/ico/gg/sunny.webp';
-            
+
             card.innerHTML = `
                 <div class="time">${timeStr}</div>
                 <img src="${weatherIconThis}" alt="weather">
                 <div class="temperature">${temp}°C</div>
             `;
             
+            if (isTomorrowShowed != true && timeStr.split(':').map(Number)[0] < (new Date).getHours()) {
+                isTomorrowShowed = true
+
+                const tommorowMark = document.createElement('div')
+                tommorowMark.className = 'tomorrowMark'
+                tommorowMark.innerHTML = `
+                    <h2>Tomorrow</h2>
+                `
+
+                container.appendChild(tommorowMark)
+            }
+
             container.appendChild(card);
         }
     });

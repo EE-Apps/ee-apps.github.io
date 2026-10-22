@@ -266,6 +266,12 @@ body {
     height: 40px;
 }
 
+.tomorrowMark {
+    h2 {
+        margin: 0;
+    }
+}
+
 .c-time, .c-temp {
     margin: 1rem 0;
     font-size: 14px;
