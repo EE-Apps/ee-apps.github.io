@@ -63,3 +63,22 @@
         }
     }
 }
+
+#usersHeader {
+    display: inline-flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+
+    #headerUsersHistBtns {
+        margin-left: auto;
+    }
+}
+
+#balanceChart {
+    max-height: 50dvh;
+    margin-bottom: 1rem;
+    background-color: var(--background-secondary);
+    border-radius: var(--br);
+    padding: 1rem;
+}

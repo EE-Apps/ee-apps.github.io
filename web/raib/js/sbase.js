@@ -19,6 +19,7 @@ window.supabase = supabase;
 // window.userid = 4;
 if (localStorage.getItem('raib-user')) window.userid = Number(localStorage.getItem('raib-user'));
 else window.userid = null;
+window.showinguserid = 4
 window.admin = false;
 window.totalMoney = 0
 
@@ -71,6 +72,7 @@ async function loadUsers() {
         }
     }
 
+    window.renderMoneyDistributionChart()
     window.initTransferPage();
 }
 
@@ -174,20 +176,315 @@ async function loadHistory(contId = 'historys', user = window.userid) {
     }
 }
 
-window.showUserHistory = async function (user) {
+function getKyivPeriodKey(date, period) {
+    const parts = new Intl.DateTimeFormat('en-GB', { 
+        timeZone: 'Europe/Kiev', 
+        year: 'numeric', month: 'numeric', day: 'numeric' 
+    }).formatToParts(date);
+    const y = parseInt(parts.find(p => p.type === 'year').value);
+    const m = parseInt(parts.find(p => p.type === 'month').value);
+    const d = parseInt(parts.find(p => p.type === 'day').value);
+
+    if (period === 'day') {
+        return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    }
+    if (period === 'month') {
+        return `${y}-${String(m).padStart(2, '0')}`;
+    }
+    if (period === 'week') {
+        // Вычисляем номер недели в году для киевской даты
+        const tempDate = new Date(Date.UTC(y, m - 1, d));
+        const startOfYear = new Date(Date.UTC(y, 0, 1));
+        const pastDays = (tempDate - startOfYear) / 86400000;
+        const weekNum = Math.ceil((pastDays + startOfYear.getUTCDay() + 1) / 7);
+        return `${y}-W${String(weekNum).padStart(2, '0')}`;
+    }
+    return date.getTime().toString();
+}
+
+function formatKyivDate(date, period) {
+    const options = { timeZone: 'Europe/Kiev' };
+    if (period === 'day') {
+        options.year = 'numeric'; options.month = '2-digit'; options.day = '2-digit';
+        return new Intl.DateTimeFormat('uk-UA', options).format(date);
+    }
+    if (period === 'month') {
+        options.year = 'numeric'; options.month = 'short'; // например, "жовт. 2023"
+        return new Intl.DateTimeFormat('uk-UA', options).format(date);
+    }
+    if (period === 'week') {
+        options.year = 'numeric'; options.month = '2-digit'; options.day = '2-digit';
+        const dateStr = new Intl.DateTimeFormat('uk-UA', options).format(date);
+        // Повторно вычисляем номер недели для отображения
+        const parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Kiev', year: 'numeric', month: 'numeric', day: 'numeric' }).formatToParts(date);
+        const y = parseInt(parts.find(p => p.type === 'year').value);
+        const m = parseInt(parts.find(p => p.type === 'month').value);
+        const d = parseInt(parts.find(p => p.type === 'day').value);
+        const tempDate = new Date(Date.UTC(y, m - 1, d));
+        const startOfYear = new Date(Date.UTC(y, 0, 1));
+        const weekNum = Math.ceil(((tempDate - startOfYear) / 86400000 + startOfYear.getUTCDay() + 1) / 7);
+        return `${dateStr} (тижд. ${weekNum})`;
+    }
+    // period === 'operation'
+    options.year = 'numeric'; options.month = '2-digit'; options.day = '2-digit';
+    options.hour = '2-digit'; options.minute = '2-digit';
+    return new Intl.DateTimeFormat('uk-UA', options).format(date);
+}
+
+window.renderBalanceChart = function(userId, period = 'operation') {
+    const canvasId = 'balanceChart'
+    let canvas = document.getElementById(canvasId)
+    
+    if (!canvas) {
+        const container = document.getElementById('userOperationsList')
+        if (!container) return
+        canvas = document.createElement('canvas')
+        canvas.id = canvasId
+        container.parentNode.insertBefore(canvas, container)
+    }
+
+    const currentUser = window.usersList[userId]
+    const currentBalance = currentUser ? currentUser.balance : 0
+
+    const userTransfers = window.historyList
+        .filter(t => t.from_account === userId || t.to_account === userId)
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+
+    const historyBackwards = []
+    let runningBalance = currentBalance
+    
+    historyBackwards.push({ date: new Date(), balance: runningBalance })
+
+    for (let i = userTransfers.length - 1; i >= 0; i--) {
+        const t = userTransfers[i]
+        if (t.to_account === userId) {
+            runningBalance -= t.amount
+        } else if (t.from_account === userId) {
+            runningBalance += t.amount
+        }
+        historyBackwards.push({ date: new Date(t.created_at), balance: Math.round(runningBalance) })
+    }
+
+    historyBackwards.reverse()
+
+    let finalData = [];
+
+    if (period === 'operation') {
+        finalData = historyBackwards;
+    } else {
+        const grouped = new Map()
+        historyBackwards.forEach(item => {
+            const key = getKyivPeriodKey(item.date, period)
+            grouped.set(key, item)
+        });
+        finalData = Array.from(grouped.values())
+    }
+
+    const labels = finalData.map(item => formatKyivDate(item.date, period))
+    const balances = finalData.map(item => item.balance)
+
+    if (window.balanceChartInstance) {
+        window.balanceChartInstance.destroy()
+    }
+
+    if (typeof Chart === 'undefined') {
+        const script = document.createElement('script')
+        script.src = 'https://cdn.jsdelivr.net/npm/chart.js'
+        script.onload = () => window.renderBalanceChart(userId, period)
+        document.head.appendChild(script)
+        return
+    }
+
+    window.balanceChartInstance = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Баланс',
+                data: balances,
+                borderColor: '#308d3b', 
+                backgroundColor: 'rgba(48, 141, 59, 0.1)', 
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true,
+                pointRadius: period === 'operation' ? 1 : 3,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Баланс: ${context.parsed.y}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                }
+            }
+        }
+    })
+}
+
+window.showUserHistory = async function (user, period = 'operation') {
+    if (user === 'all') {
+        const canvas = document.getElementById('balanceChart');
+        if (canvas) canvas.style.display = 'none'
+    } else {
+        const canvas = document.getElementById('balanceChart');
+        if (canvas) canvas.style.display = 'block'
+    }
+
     const result = await loadHistory('userOperationsList', user)
     
-    // Проверка на случай ошибки внутри loadHistory
     if (!result) return 
 
     const { operationsNum, operationsSum } = result
 
     window.pages.switch('pusershistory')
     document.getElementById('totalOperations').textContent = operationsNum
+    window.showinguserid = user
     
-    // Красивое отображение знака валюты/минуса
     document.getElementById('totalOperationsSum').textContent = Math.round(operationsSum > 0 ? `+${operationsSum}` : operationsSum)
+    
+    if (user !== 'all') {
+        window.renderBalanceChart(user, period)
+    }
 }
+
+// Вспомогательная функция для генерации приятных цветов
+function getChartColor(index, total) {
+    // Генерируем оттенки по цветовому кругу (HSL)
+    const hue = Math.round((index / total) * 360);
+    return `hsl(${hue}, 65%, 55%)`;
+}
+
+window.renderMoneyDistributionChart = function() {
+    const canvasId = 'moneyDistributionChart';
+    let canvas = document.getElementById(canvasId);
+    
+    // Находим контейнер для вставки (например, перед списком пользователей)
+    const container = document.getElementById('userslist');
+    if (!container) return;
+
+    if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.id = canvasId;
+        canvas.style.maxWidth = '400px';
+        canvas.style.margin = '0 auto 30px auto';
+        // Вставляем график ПЕРЕД списком пользователей
+        container.parentNode.insertBefore(canvas, container);
+    }
+
+    // 1. Подготовка данных
+    const users = Object.values(window.usersList || {});
+    const totalMoney = window.totalMoney || users.reduce((sum, u) => sum + (Number(u.balance) || 0), 0);
+
+    // Фильтруем только тех, у кого баланс > 0, и сортируем по убыванию
+    const activeUsers = users
+        .filter(u => Number(u.balance) > 0)
+        .sort((a, b) => Number(b.balance) - Number(a.balance));
+
+    const MAX_SLICES = 8; // Показываем топ-8, остальные в "Остальные"
+    
+    const labels = [];
+    const data = [];
+    const colors = [];
+    let othersBalance = 0;
+
+    activeUsers.forEach((u, index) => {
+        if (index < MAX_SLICES) {
+            labels.push(u.name || `User #${u.id}`);
+            data.push(Number(u.balance));
+            colors.push(getChartColor(index, MAX_SLICES));
+        } else {
+            othersBalance += Number(u.balance);
+        }
+    });
+
+    // Если есть пользователи за пределами топ-8, добавляем их в одну категорию
+    if (othersBalance > 0) {
+        labels.push('Остальные');
+        data.push(othersBalance);
+        colors.push('#e5e7eb'); // Нейтральный серый цвет
+    }
+
+    // Если денег вообще нет ни у кого
+    if (data.length === 0) {
+        labels.push('Нет данных');
+        data.push(1);
+        colors.push('#f3f4f6');
+    }
+
+    // 2. Уничтожаем старый график при обновлении
+    if (window.distributionChartInstance) {
+        window.distributionChartInstance.destroy();
+    }
+
+    // 3. Динамическая загрузка Chart.js (если еще не загружен)
+    if (typeof Chart === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+        script.onload = () => window.renderMoneyDistributionChart();
+        document.head.appendChild(script);
+        return;
+    }
+
+    // 4. Рисуем график
+    window.distributionChartInstance = new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors,
+                borderWidth: 2,
+                borderColor: '#ffffff',
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            cutout: '65%', // Толщина кольца (65% от радиуса - пустота внутри)
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        usePointStyle: true,
+                        font: { size: 12 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed;
+                            const percentage = totalMoney > 0 ? ((value / totalMoney) * 100).toFixed(1) : 0;
+                            return `${label}: ${value} (${percentage}%)`;
+                        },
+                    }
+                }
+            }
+        },
+    });
+};
 
 window.loadUsers = loadUsers;
 window.loadHistory = loadHistory;
@@ -313,3 +610,14 @@ window.login = async function() {
     localStorage.setItem('raib-user', Number(id));
     location.reload();
 }
+
+document.querySelectorAll('#headerUsersHistBtns button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        console.log(window.showinguserid + ' - ' + btn.dataset.val)
+        window.renderBalanceChart(Number(window.showinguserid), btn.dataset.val)
+    })
+})
+
+document.getElementById('pusers-btn').addEventListener('click', () => {
+    window.renderMoneyDistributionChart()
+})
